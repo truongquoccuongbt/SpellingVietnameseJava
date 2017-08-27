@@ -1,3 +1,5 @@
+package Algorithm;
+
 import java.util.HashMap;
 
 public class Ngram {
@@ -38,8 +40,19 @@ public class Ngram {
 		return instance;
 	}
 	
-	/**
-	 * dùng để khởi tạo bộ ngram, và sinh bộ xác suất
-	 */
+	public double CalBigram(String w1, String w2) {
+		String key = w1 + " " + w2;
+		int Cw1 = 0;
+		int Cw1w2 = 0;
+		double alpha = 0.1;
+		if (_uniAmount.containsKey(w1.toLowerCase())) {
+			Cw1 = _uniAmount.get(w1.toLowerCase());
+		}
+		if (_biAmount.containsKey(key.toLowerCase())) {
+			Cw1w2 = _biAmount.get(key.toLowerCase());
+		}
+		double ret = (double)(Cw1w2 + alpha) / (Cw1 + _sumUni * alpha);
+		return ret;
+	}
 	
 }

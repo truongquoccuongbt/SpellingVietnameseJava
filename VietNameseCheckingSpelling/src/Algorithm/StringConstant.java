@@ -1,4 +1,4 @@
-
+package Algorithm;
 public class StringConstant {
 	private static StringConstant instance = new StringConstant();
 	
@@ -29,24 +29,24 @@ public class StringConstant {
 	};
 	
 	public char[] vnAlphabetArr_LowerCase = new char[] {
-		'A', 'Ă', 'Â', 'B', 'C', 'D', 'Đ', 'E', 'Ê', 'G', 'H', 'I',
-        'K', 'L', 'M', 'N', 'O','Ô', 'Ơ', 'P','Q', 'R', 'S', 'T',
-        'U','Ư', 'V', 'X', 'Y'
+			 'a', 'ă', 'â', 'b', 'c', 'd', 'đ', 'e', 'ê', 'g', 'h', 'i',
+	          'k', 'l', 'm', 'n', 'o','ô', 'ơ', 'p','q', 'r', 's', 't',
+	           'u','ư', 'v', 'x', 'y'
 	};
 	
 	public char[] vnAlphabetArr_UpperCase = new char[] {
-		'A', 'Ă', 'Â', 'B', 'C', 'D', 'Đ', 'E', 'Ê', 'G', 'H', 'I',
-        'K', 'L', 'M', 'N', 'O','Ô', 'Ơ', 'P','Q', 'R', 'S', 'T',
-        'U','Ư', 'V', 'X', 'Y'			
+			'A', 'Ă', 'Â', 'B', 'C', 'D', 'Đ', 'E', 'Ê', 'G', 'H', 'I',
+            'K', 'L', 'M', 'N', 'O','Ô', 'Ơ', 'P','Q', 'R', 'S', 'T',
+            'U','Ư', 'V', 'X', 'Y'			
 	};
 	
-	//nguyên âm
+	// nguyên âm
 	public char[] VNVowelArr_LowerCase = new char[] {
-		'a', 'ă', 'â', 'e', 'ê',  'o','ô', 'ơ', 'i','u','ư', 'y'
+			'a', 'ă', 'â', 'e', 'ê',  'o','ô', 'ơ', 'i','u','ư', 'y'
 	};
 	
 	public char[] VNVowelArr_UpperCase = new char[] {
-		'A', 'Ă', 'Â', 'E', 'Ê', 'O','Ô', 'Ơ', 'I', 'U','Ư', 'Y'
+			'A', 'Ă', 'Â', 'E', 'Ê', 'O','Ô', 'Ơ', 'I', 'U','Ư', 'Y'
 	};
 	
 	public char[] VNVowelWithSignArr_LowerCase = new char[] {
@@ -79,22 +79,22 @@ public class StringConstant {
 	};
 	
 	public char[][] vnVowelWithSignMatrix_LowerCase = new char[][] {
-		{ 'á', 'ắ', 'ấ', 'é', 'ế','ó','ố', 'ớ', 'í','ú','ứ', 'ý'}, // thanh sắc
-        { 'à', 'ằ', 'ầ', 'è', 'ề','ò','ồ', 'ờ', 'ì','ù','ừ', 'ỳ' }, // thanh huyền
-        { 'ả', 'ẳ', 'ẩ', 'ẻ', 'ể', 'ỏ','ổ', 'ở', 'ỉ', 'ủ','ử', 'ỷ' }, // thanh hỏi
-        { 'ã', 'ẵ', 'ẫ', 'ẽ', 'ễ', 'õ','ỗ', 'ỡ', 'ĩ','ũ','ữ', 'ỹ' }, // thanh ngã
-        { 'ạ', 'ặ', 'ậ', 'ẹ', 'ệ',  'ọ','ộ', 'ợ','ị', 'ụ','ự', 'ỵ' } // thanh nặng
+		 { 'á', 'ắ', 'ấ', 'é', 'ế','ó','ố', 'ớ', 'í','ú','ứ', 'ý'}, // thanh sắc
+         { 'à', 'ằ', 'ầ', 'è', 'ề','ò','ồ', 'ờ', 'ì','ù','ừ', 'ỳ' }, // thanh huyền
+         { 'ả', 'ẳ', 'ẩ', 'ẻ', 'ể', 'ỏ','ổ', 'ở', 'ỉ', 'ủ','ử', 'ỷ' }, // thanh hỏi
+         { 'ã', 'ẵ', 'ẫ', 'ẽ', 'ễ', 'õ','ỗ', 'ỡ', 'ĩ','ũ','ữ', 'ỹ' }, // thanh ngã
+         { 'ạ', 'ặ', 'ậ', 'ẹ', 'ệ',  'ọ','ộ', 'ợ','ị', 'ụ','ự', 'ỵ' } // thanh nặng
 	};
 	
 	public char[][] vnVowelWithSignMatrix_UpperCase = new char[][] {
-		{ 'Á', 'Ắ', 'Ấ', 'É', 'Ế','Ó','Ố', 'Ớ', 'Í','Ú','Ứ', 'Ý'}, // thanh sắc
-        { 'À', 'Ằ', 'Ầ', 'È', 'Ề','Ò','Ồ', 'Ờ', 'Ì','Ù','Ừ', 'Ỳ' }, // thanh huyền
-        { 'Ả', 'Ẳ', 'Ẩ', 'Ẻ', 'Ể','Ỏ','Ổ', 'Ở', 'Ỉ','Ủ','Ử', 'Ỷ' }, // thanh hỏi
-        { 'Ã', 'Ẵ', 'Ẫ', 'Ẽ', 'Ễ','Õ','Ỗ', 'Ỡ', 'Ĩ','Ũ','Ữ', 'Ỹ' }, // thanh ngã
-        { 'Ạ', 'Ặ', 'Ậ', 'Ẹ', 'Ệ', 'Ọ','Ộ', 'Ợ','Ị','Ụ','Ự', 'Ỵ' } // thanh nặng
+		 { 'Á', 'Ắ', 'Ấ', 'É', 'Ế','Ó','Ố', 'Ớ', 'Í','Ú','Ứ', 'Ý'}, // thanh sắc
+         { 'À', 'Ằ', 'Ầ', 'È', 'Ề','Ò','Ồ', 'Ờ', 'Ì','Ù','Ừ', 'Ỳ' }, // thanh huyền
+         { 'Ả', 'Ẳ', 'Ẩ', 'Ẻ', 'Ể','Ỏ','Ổ', 'Ở', 'Ỉ','Ủ','Ử', 'Ỷ' }, // thanh hỏi
+         { 'Ã', 'Ẵ', 'Ẫ', 'Ẽ', 'Ễ','Õ','Ỗ', 'Ỡ', 'Ĩ','Ũ','Ữ', 'Ỹ' }, // thanh ngã
+         { 'Ạ', 'Ặ', 'Ậ', 'Ẹ', 'Ệ', 'Ọ','Ộ', 'Ợ','Ị','Ụ','Ự', 'Ỵ' } // thanh nặng
 	};
 	
-	//nguyên âm mang dấu phụ
+	// nguyên âm mang dấu phụ
 	public char[] subVnVowelArr_LowerCase = new char[] {
 			'ă', 'â', 'ê','ô', 'ơ','ư'
 	};
@@ -104,12 +104,12 @@ public class StringConstant {
 	};
 	
 	public char[][] vnCharacterMatrix = new char[][] {
-		{'d','đ', ' '},
-        {'e','ê', ' '},
-        {'a','ă','â'},
-        {'o','ô', 'ơ'},
-        {'u','ư', ' '},
-        {'ư', 'â', ' ' }
+		 {'d','đ', ' '},
+         {'e','ê', ' '},
+         {'a','ă','â'},
+         {'o','ô', 'ơ'},
+         {'u','ư', ' '},
+         {'ư', 'â', ' ' }
 	};
 	
 	public String vnCharacter = "ăâêôơưđ";
@@ -117,11 +117,11 @@ public class StringConstant {
 			"aw", "aa", "ee", "oo", "ow", "uw", "dd"
 	};
 	
-	//phụ âm
+	// phụ âm
 	public String[] vnConsonantArr_LowerCase = new String[] {
-			"ngh","ng", "nh","ph", "th", "tr", "kh","b", "ch" ,"c","d", "đ","gi", "gh", "g",  "h", "k",
-            "l", "m", "n" ,  "qu", "r", "s"
-           , "t", "v", "x"
+			 "ngh","ng", "nh","ph", "th", "tr", "kh","b", "ch" ,"c","d", "đ","gi", "gh", "g",  "h", "k",
+	            "l", "m", "n" ,  "qu", "r", "s"
+	           , "t", "v", "x"
 	};
 	
 	public String[] vnConsonantArr_UpperCase = new String[] {
@@ -163,8 +163,8 @@ public class StringConstant {
     public String patternHasWord = "[\\w]";
     
     public String[] vnAcronym = new String[] {
-    		"XHCN", "CNXH", "ĐCS", "CHXHCNVN", "MTDTGPMNVN", "QDND","QLVNCH","VNQDĐ","VNQDD","VNCH","VNDCCH",
-            "ĐH","TS", "PGS", "CLB"
+    		 "XHCN", "CNXH", "ĐCS", "CHXHCNVN", "MTDTGPMNVN", "QDND","QLVNCH","VNQDĐ","VNQDD","VNCH","VNDCCH",
+             "ĐH","TS", "PGS", "CLB"
     };
     
     public String patternSignSentence = "[-|/|\\|>|<|\\[|\\]|,|\"|(|)|“|”|.!?;:…]";

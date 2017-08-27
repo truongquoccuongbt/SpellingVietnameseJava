@@ -1,3 +1,5 @@
+package Algorithm;
+
 import java.io.File;
 
 public class FileManager {
@@ -14,10 +16,6 @@ public class FileManager {
 		return Directory() + "/Resources/sortedCompoundWordDict.txt";
 	}
 	
-	public String CompoundWordLinkedList() {
-		return Directory() + "/Resources/sortedCompoundWordDict.txt";
-	}
-	
 	public String UniGram() {
 		return Directory() + "/Resources/filteredUni.txt";
 	}
@@ -26,7 +24,11 @@ public class FileManager {
 		return Directory() + "/Resources/filteredBi.txt";
 	}
 	
-	public static FileManager Instance() {
+	public String CompoundWordLinkedList() {
+		return Directory() + "/Resources/newCompoundWordByViet39K.txt";
+	}
+	
+	public static FileManager GetInstance() {
 		return instance;
 	}
 }
