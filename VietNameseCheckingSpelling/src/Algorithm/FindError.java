@@ -1,5 +1,10 @@
 package Algorithm;
 
+import java.io.BufferedReader;
+import java.io.Console;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -17,7 +22,7 @@ public class FindError {
 	//
 	private Context originalContext;
 	// partern chức những ký tự đăc biệt
-	private Pattern patternCheckSpecial = Pattern.compile(StringConstant.GetInstance().patternCheckSpecialChar);
+	private Pattern patternCheckSpecial = Pattern.compile(StringConstant.GetInstance().patternCheckSpecialChar, Pattern.UNICODE_CHARACTER_CLASS);
 	// giữ từ đang kiểm lỗi sau khi đã bỏ dấu câu
 	private String iWordReplaced;
 	// danh sách các câu
@@ -46,6 +51,10 @@ public class FindError {
 		return instance;
 	}
 	
+	public HashMap<Context, Integer> GetDictContext_ErrorRange() {
+		return this.GetDictContext_ErrorRange();
+	}
+	
 	private FindError() {
 		this.isStopFindError = false;
 		this.dictContext_ErrorString = new HashMap<>();
@@ -53,8 +62,6 @@ public class FindError {
 		this.hSetCand = new HashSet<>();
 		this.dictContext_ErrorRange = new HashMap<>();
 	}
-	
-	
 	
 	public boolean isStopFindError() {
 		return isStopFindError;
@@ -91,10 +98,14 @@ public class FindError {
 				//Kiểm tra các ký tự đặc biệt, mail, số, tên riếng
 				// Nếu có chứa thì bỏ qua
 				Matcher m = patternCheckSpecial.matcher(originalContext.getToken());
-				// Viết hoa giữa câu thì bỏ qua vì là danh từ riêng
-				if (Character.isUpperCase(word.trim().charAt(0))) {
+				if (m.matches()) {
 					continue;
 				}
+				// Viết hoa giữa câu thì bỏ qua vì là danh từ riêng
+				if (Character.isUpperCase(word.trim().charAt(0)) && i != 0) {
+					continue;
+				}
+				
 				else {
 					Context context = new Context(i, wordsInSentence);
 					iWordReplaced = context.getToken().replaceAll(StringConstant.GetInstance().patternSignSentence, "");
@@ -108,7 +119,8 @@ public class FindError {
 						
 					}
 					originalContext.CopyForm(context);
-					if (VNDictionary.GetInstance().IsSyllableVN(word)) {
+					if (!VNDictionary.GetInstance().IsSyllableVN(iWordReplaced.trim().toLowerCase())) {
+						System.out.println(iWordReplaced);
 						if (i < length - 1) {
 							CheckError(context, i, false);
 						}
@@ -117,11 +129,11 @@ public class FindError {
 							if (HasCandidate(context, false)) {
 								AddError(context, false);
 							}
-						}
+						}						
 					}
 					// End if wrong word
 					// Kiểm tra token có khả năng sai ngữ cảnh hay không
-					
+						
 					else if (!RightWordCandidate.GetInstance().CheckRightWord(context)){
 						if (i < length - 1) {
 							CheckError(context, i, true);
@@ -131,15 +143,16 @@ public class FindError {
 							if (HasCandidate(context, true)) {
 								AddError(context, true);
 							}
-						}
-					} // end else if right word
+						}		} // end else if right word
 				}
-				start += word.length() + 1;
+				start++;
 			} // end for : duyệt từng từ trong câu
 		}// end for: duyệt từ câu
 		isStopFindError = true;
 		
 		for (Context ct : dictContext_ErrorRange.keySet()) {
+//			int a = FindIndexSentenceOfWord(dictContext_ErrorRange.get(ct));
+//			System.out.println(a);
 			dictContext_ErrorString.put(ct, this.arrSentences[FindIndexSentenceOfWord(dictContext_ErrorRange.get(ct))]);
 		}
 	}
@@ -159,7 +172,7 @@ public class FindError {
 			
 			// Kiểm tra từ hiện tại có sai do từ tiếp theo hay không
 			context.GetContext(i + 1, wordsInSentence);
-			
+		
 			// Nếu ngữ cảnh từ tiếp theo, có chứa từ hiện tại thì kiểm tra 
 			if (context.toString().contains(originalContext.getToken())) {
 				hSetCand.clear();
@@ -208,7 +221,6 @@ public class FindError {
 	}
 	
 	private String GetElementAtIndexHashSet(HashSet<String> a, int index) {
-		String tmp;
 		int pos = 0;
 		for (Iterator<String> it = a.iterator(); it.hasNext();) {
 			if (pos == index) {

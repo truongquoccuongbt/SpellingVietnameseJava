@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import Algorithm.FindError;
+import Algorithm.FixError;
+import Algorithm.Ngram;
+import Algorithm.VNDictionary;
 
 public class CheckError {
 	private static CheckError instance = new CheckError();
@@ -19,23 +22,28 @@ public class CheckError {
 	}
 	
 	private CheckError() {
-		this.input = ReadInput();
+		this.input = "";
+		RunFirst();
+	}
+	
+	private void RunFirst() {
+		Ngram.GetInstance().RunFirst();
+		VNDictionary.GetInstance().RunFirst();
 	}
 	
 	public String ReadInput() {
-		String strInput = "";
 		try {
 			String path = new File("").getAbsolutePath() + "/input/input.txt";
 			FileInputStream fs = new FileInputStream(path);
 			BufferedReader br = new BufferedReader(new InputStreamReader(fs));
 			String line;
 			while ((line = br.readLine()) != null) {
-				strInput = line;
+				this.input = line;
 			}
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
-		return strInput;
+		return this.input;
 	}
 	
 	public void Check() {
@@ -44,5 +52,9 @@ public class CheckError {
 		
 		int countError = FindError.GetInstance().CountError();
 		System.out.println("Số lỗi: " + countError);
+	}
+	
+	public void GetCandidate() {
+		FixError.GetInstance().GetCandidatesWithContext(FindError.GetInstance()., dictError);
 	}
 }

@@ -7,13 +7,14 @@ import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 
 public class VNDictionary {
-	// tá»« Ä‘iá»ƒn Ă¢m tiáº¿t
+	// từ điển âm tiết
 	public HashMap<String, String> SyllableDict;
-	// tá»« Ä‘iá»ƒn tá»« ghĂ©p
+	// từ điển ghép
 	public ArrayList<String> CompoundDict;
-	// dĂ¹ng tá»« Ä‘iá»ƒn chÆ°a cĂ³ key
+	// dùng từ điển chưa có key
 	private VNDictionary() {
 		this.SyllableDict = new HashMap<>();
 		this.CompoundDict = new ArrayList<>();
@@ -29,7 +30,7 @@ public class VNDictionary {
 		return instance;
 	}
 	/**
-	 * Ä�á»�c tá»« Ä‘iá»ƒn tiáº¿ng Ă¢m tiáº¿t lĂªn
+	 * Đọc từ điển tiếng âm tiết 
 	 */
 	public HashMap<String, String> ReadSyllableDict() {
 		HashMap<String, String> result = new HashMap<>();
@@ -49,7 +50,7 @@ public class VNDictionary {
 	}
 	
 	/**
-	 * Ä�á»�c tá»« Ä‘iá»ƒn tá»« ghĂ©p tiáº¿ng Viá»‡t
+	 * đọc từ điển từ ghép tiếng việt
 	 */
 	public ArrayList<String> ReadCompoundWordDict() {
 		ArrayList<String> result = new ArrayList<>();
@@ -69,14 +70,14 @@ public class VNDictionary {
 	}
 	
 	/**
-	 * Kiá»ƒm tra má»™t token cĂ³ lĂ  Ă¢m tiáº¿t tiáº¿ng Viá»‡t hay khĂ´ng
+	 * Kiểm tra một token có là âm tiết tiếng việt hay không
 	 */
 	public boolean IsSyllableVN(String token) {
 		return this.SyllableDict.containsKey(token.toLowerCase());
 	}
 	
 	/**
-	 * tráº£ vá»� tá»« ghĂ©p cĂ³ dáº¡ng X X + 1 X + 2
+	 * trả về từ ghép dạng X X+1 X+2
 	 */
 	public HashSet<String> FindCompoundVNWord_Xxx(Context context) {
 		HashSet<String> hSetResult = new HashSet<>();
@@ -100,16 +101,17 @@ public class VNDictionary {
 	}
 	
 	/**
-	 * tráº£ vá»� tá»« ghĂ©p dáº¡ng X-1 X X+1
+	 * trả về từ ghép liền sau token dạng X-1 X
 	 */
 	public HashSet<String> FindCompoundVnWord_xXx(Context context) {
 		HashSet<String> hSetResult = new HashSet<>();
 		String[] iArr;
 		if (context.getNext().trim().length() > 0 && context.getPre().trim().length() > 0) {
-			// duyá»‡t qua ArrayList<string> lĂ  value vá»›i key lĂ  token
-			for (String i : CompoundWordVn.GetInstance().compoundWordVnDict.get(context.getPre().toLowerCase())) {
-				iArr = i.trim().split(" ");
-				// tá»« ghĂ©p cĂ³ 3 Ă¢m tiáº¿t dáº¡ng: w_1 iArr[0]_w_1
+			// duyệt qua List<string> là value với key là token
+			ArrayList<String> arr = CompoundWordVn.GetInstance().compoundWordVnDict.get(context.getPre().toLowerCase());
+			for (int i = 0; i < arr.size(); i++) {
+				iArr = arr.get(i).trim().split(" ");
+				// từ ghép có 2 âm tiết dạng: token iArr[0]
 				if (iArr.length == 2) {
 					if (!iArr[0].toLowerCase().equals(context.getToken().toLowerCase()) && iArr[1].equals(context.getNext().trim()) && iArr[0].length() > 0 && Candidate.GetInstance().IsLikely(context.getToken(), iArr[0])) {
 						hSetResult.add(iArr[0]);
@@ -121,20 +123,62 @@ public class VNDictionary {
 	}
 	
 	/*
-	 * tráº£ vá»� tá»« ghĂ©p dáº¡ng X-2 X-1 X
+	 * trả về từ ghép dạng X-2 X-1 X
 	 */
 	public HashSet<String> FindCompoundVnWord_xxX(Context context) {
 		HashSet<String> hSetResult = new HashSet<>();
 		String[] iArr;
-		for (String i : CompoundWordVn.GetInstance().compoundWordVnDict.get(context.getPrePre().toLowerCase())) {
-			iArr = i.trim().split(" ");
-			// tá»« ghĂ©p cĂ³ 3 Ă¢m tiáº¿t dáº¡ng: w_2 w_1 iArr[1]
-			if (iArr.length == 2) {
-				if (!iArr[1].toLowerCase().equals(context.getToken().toLowerCase())
-						&& iArr[0].equals(context.getPre().trim())
-						&& iArr[1].length() > 0
-						&& Candidate.GetInstance().IsLikely(context.getToken(), iArr[1])) {
-					hSetResult.add(iArr[1]);
+		ArrayList<String> arr = CompoundWordVn.GetInstance().compoundWordVnDict.get(context.getPrePre().toLowerCase());
+		if (context.getPrePre().trim().length() > 0 && context.getPrePre().trim().length() > 0 && CompoundWordVn.GetInstance().compoundWordVnDict.containsKey(context.getPrePre().trim().toLowerCase())) {
+			for (int i = 0; i < arr.size(); i++) {
+				iArr = arr.get(i).trim().split(" ");
+				// tá»« ghĂ©p cĂ³ 3 Ă¢m tiáº¿t dáº¡ng: w_2 w_1 iArr[1]
+				if (iArr.length == 2) {
+					if (!iArr[1].toLowerCase().equals(context.getToken().toLowerCase())
+							&& iArr[0].equals(context.getPre().trim())
+							&& iArr[1].length() > 0
+							&& Candidate.GetInstance().IsLikely(context.getToken(), iArr[1])) {
+						hSetResult.add(iArr[1]);
+					}
+				}
+			}
+		}
+		return hSetResult;
+	}
+	
+	/**
+	 * Tìm X: trả về từ ghép liền trước dạng token dạng X X+1
+	 */
+	public HashSet<String> FindCompoundVnWord_Xx(Context context) {
+		HashSet<String> hSetResult = new HashSet<>();
+		if (context.getNext().length() > 0) {
+			// duyệt qua tất cả trường hợp, với value là token
+			for (String str : CompoundWordVn.GetInstance().compoundWordVnDict.keySet()) {
+				if (!str.equals(context.getToken().toLowerCase()) && 
+					CompoundWordVn.GetInstance().compoundWordVnDict.containsValue(context.getNext()) &&
+					Candidate.GetInstance().IsLikely(context.getToken(), str)) {
+					hSetResult.add(str);
+				}
+			}
+		}
+		return hSetResult;
+	}
+	
+	/**
+	 * trả về từ ghép liền sau token dạng X-1 X
+	 */
+	public HashSet<String> FindCompoundVnWord_xX(Context context) {
+		HashSet<String> hSetResult = new HashSet<>();
+		String[] tmp;
+		if (context.getPre().trim().length() > 0 && CompoundWordVn.GetInstance().compoundWordVnDict.containsKey(context.getPre().trim().toLowerCase())) {
+			for (String str : CompoundWordVn.GetInstance().compoundWordVnDict.get(context.getPre().trim().toLowerCase())) {
+				tmp = str.trim().split(" ");
+				// từ ghép có 2 âm tiết dạng: token iArr[0]
+				if (tmp.length == 1) {
+					if (!tmp[0].toLowerCase().equals(context.getToken().toLowerCase()) &&
+						tmp[0].length() > 0 && Candidate.GetInstance().IsLikely(context.getToken(), tmp[0])) {
+						hSetResult.add(tmp[0]);
+					}
 				}
 			}
 		}

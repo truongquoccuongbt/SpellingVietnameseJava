@@ -241,4 +241,38 @@ public class Context {
 		this.next = c.next;
 		this.nextNext = c.nextNext;
 	}
+	
+	@Override
+	public String toString() {
+		if (this.prePre == null) {
+			this.prePre = "";
+		}
+		if (this.pre == null) {
+			this.pre = "";
+		}
+		if (this.next == null) {
+			this.next = "";
+		}
+		if (this.nextNext == null) {
+			this.nextNext = "";
+		}
+		String pp = this.prePre.equals(Ngram.GetInstance().START_STRING()) ? "" : this.prePre;
+		String p = this.pre.equals(Ngram.GetInstance().START_STRING()) ? "" : this.pre;
+		String n = this.next.equals(Ngram.GetInstance().END_STRING()) ? "" : this.next;
+		String nn = this.nextNext.equals(Ngram.GetInstance().END_STRING()) ? "" : this.nextNext;
+		return String.format("%s %s %s %s %s", pp, p, this.token, n, nn).trim();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		Context c;
+		if (obj.getClass().getName() != this.getClass().getName()) {
+			return false;
+		}
+		else c = (Context)obj;
+		if (this.token.equals(c.token)) {
+			return true;
+		}
+		return false;
+	}
 }

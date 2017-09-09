@@ -1,5 +1,10 @@
 package Algorithm;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 
 public class Ngram {
@@ -55,4 +60,53 @@ public class Ngram {
 		return ret;
 	}
 	
+	/**
+	 *  Đọc dữ liệu của unigram: key và value (vị trí).
+	 */
+	private void ReadUni(String path) {
+		try {
+			FileInputStream fs = new FileInputStream(path);
+			BufferedReader br = new BufferedReader(new InputStreamReader(fs));
+			String line;
+			String[] tmp;
+			while ((line = br.readLine()) != null) {
+				tmp = line.split(" ");
+				_uniAmount.put(tmp[0], Integer.parseInt(tmp[2]));
+			}
+		}catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void ReadBiAmount(String path) {
+		try {
+			FileInputStream fs = new FileInputStream(path);
+			BufferedReader br = new BufferedReader(new InputStreamReader(fs));
+			String line, firstSyll, secondSyll;
+			String[] str;
+			while ((line = br.readLine()) != null) {
+				str = line.split(" ");
+				firstSyll = str[0];
+				secondSyll = str[1];
+				_biAmount.put(firstSyll + " " + secondSyll, Integer.parseInt(str[2]));
+			}
+		}catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void SumWordInCorpus() {
+		for (String key : _uniAmount.keySet()) {
+			_sumUni += this._uniAmount.get(key);
+		}
+		for (String key : _biAmount.keySet()) {
+			_sumBi += this._biAmount.get(key);
+		}
+	}
+	
+	public void RunFirst() {
+		ReadUni(new File("").getAbsolutePath() + "\\Resources\\filteredUni.txt");
+		ReadBiAmount(new File("").getAbsolutePath() + "\\Resources\\filteredBi.txt");
+		SumWordInCorpus();
+	}
 }

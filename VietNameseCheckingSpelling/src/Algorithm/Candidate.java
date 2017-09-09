@@ -58,13 +58,33 @@ public class Candidate {
 	}
 	
 	/**
-	 * 
+	 * tạo candidate dựa trên từ ghép.
 	 */
-//	public HashSet<String> CreateCandByCompoundWord(Context context) {
-//		HashSet<String> hset = new HashSet<>();
-//		// tĂ¬m x
-//		hset.addAll(VNDictionary.GetInstance().FindCompoundVNWord_Xxx(context));
-//	}
+	public HashSet<String> CreateCandByCompoundWord(Context context) {
+		HashSet<String> hset = new HashSet<>();
+		// tìm x
+		UnionWith(hset, VNDictionary.GetInstance().FindCompoundVNWord_Xxx(context));
+		UnionWith(hset, VNDictionary.GetInstance().FindCompoundVnWord_xXx(context));
+		UnionWith(hset, VNDictionary.GetInstance().FindCompoundVnWord_xxX(context));
+		if (hset.size() > 0) {
+			return hset;
+		}
+		UnionWith(hset, VNDictionary.GetInstance().FindCompoundVnWord_Xx(context));
+		UnionWith(hset, VNDictionary.GetInstance().FindCompoundVnWord_xX(context));
+		return hset;
+	}
+	
+	private HashSet<String> UnionWith(HashSet<String> a, HashSet<String> b) {
+		HashSet<String> c = new HashSet<>(a);
+		String tmp;
+		for (Iterator<String> it = b.iterator(); it.hasNext();) {
+			tmp = it.next();
+			if (!a.contains(tmp)) {
+				c.add(tmp);
+			}
+		}
+		return c;
+	}
 	
 	/**
 	 * tạo candicate dựa trên ngữ cảnh
@@ -74,11 +94,19 @@ public class Candidate {
 		for (String key : Ngram.GetInstance().get_biAmount().keySet()) {
 			if (key.contains(Ngram.GetInstance().START_STRING()) || key.contains(Ngram.GetInstance().END_STRING()))
 				continue;
+			
 			if (IsLikely(context.getToken(), key) && (key.contains(context.getPre()) || key.contains(context.getNext()))) {
 				String[] word = key.split(" ");
 				if (!word[1].equals(context.getToken().toLowerCase()) && word[0].equals(context.getPre()) && word[1].length() > 0) {
 					lstCandidate.add(word[1]);
 				}
+				// check
+				if (key.equals("dịch chợ")) {
+					System.out.println(word[0].equals(context.getToken().toLowerCase()));
+					System.out.println(word[1].equals(context.getNext().toLowerCase()));
+				}
+				/////
+				
 				else if (!word[0].equals(context.getToken().toLowerCase()) && word[1].equals(context.getNext()) && word[0].length() > 0) {
 					lstCandidate.add(word[0]);
 				}
@@ -214,7 +242,7 @@ public class Candidate {
 		double score = MAX_SCORE();
 		token = token.toLowerCase();
 		candidate = candidate.toLowerCase();
-		double simScore = CalStringSim(token, candidate);
+		//double simScore = CalStringSim(token, candidate);
 		double diffScore = CalScore_StringDiff(token, candidate);
 		score = diffScore;
 		if (score > MAX_SCORE()) {
@@ -583,8 +611,15 @@ public class Candidate {
 		if (x.length() < 4) {
 			return tmp;
 		}
+		if (x.equals("nghiêng")) {
+			System.out.println();
+		}
+		try {
 		for (int i = 0; i < x.length() - 2; i++) {
 			tmp.add(x.substring(i, 3));
+		}
+		} catch (Exception e) {
+			System.out.println(x);
 		}
 		return tmp;
 	}

@@ -159,7 +159,7 @@ public class StringConstant {
 	public String patternEndMiddleSymbol = "[”|,|)]";
     public String patternEndSentenceCharacter = "[.!?;:…]";
     
-    public String patternCheckSpecialChar = "[-|\\/|\\|>|<|\\[|\\]|\"|(|)|“|”|@|#|$|%|^|&|\\*|\\d|\\W]";
+    public String patternCheckSpecialChar = ".*[-|\\/|\\|>|<|\\[|\\]|\"|(|)|“|”|@|#|$|%|^|&|\\*|\\d|\\W].*";
     public String patternHasWord = "[\\w]";
     
     public String[] vnAcronym = new String[] {
@@ -173,4 +173,5 @@ public class StringConstant {
     public String patternSPEC = "[-|\\/|\\|>|<|\\[|\\]||@|#|$|%|^|&|\\*|\\d|]";
     public String patternOPEN = "[(|“]";
     public String patternCLOSE = "[,|)|”|.!?;:…]";
+    
 }
