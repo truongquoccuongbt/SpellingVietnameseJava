@@ -8,7 +8,15 @@ import javax.naming.spi.DirStateFactory.Result;
 
 public class WrongWordCandidate {
 	private static WrongWordCandidate instance = new WrongWordCandidate();
-	
+	private String candiate;
+	public String getCandiate() {
+		return candiate;
+	}
+
+	public void setCandiate(String candiate) {
+		this.candiate = candiate;
+	}
+
 	public static WrongWordCandidate GetInstance() {
 		return instance;
 	}
@@ -60,12 +68,14 @@ public class WrongWordCandidate {
 				if (score >= Candidate.GetInstance().LIM_SCORE()) {
 					if (candidateWithScore.size() < 5) {
 						candidateWithScore.put(candidate, score);
-						candidateWithScore = Candidate.GetInstance().SordDict(candidateWithScore);
+						//candidateWithScore = Candidate.GetInstance().SordDict(candidateWithScore);
+						this.candiate = Candidate.GetInstance().GetCandidate(candidateWithScore);
 					}
 					else if (candidateWithScore.get(GetLastKeyInCandidateScore(candidateWithScore)) < score) {
 						candidateWithScore.remove(GetLastKeyInCandidateScore(candidateWithScore));
 						candidateWithScore.put(candidate, score);
-						candidateWithScore = Candidate.GetInstance().SordDict(candidateWithScore);
+						//candidateWithScore = Candidate.GetInstance().SordDict(candidateWithScore);
+						this.candiate = Candidate.GetInstance().GetCandidate(candidateWithScore);
 					}
 				}
 			}
@@ -103,4 +113,14 @@ public class WrongWordCandidate {
 		}
 		return key;
 	}
+	
+	private void ChangePosInHashMap(HashMap<String, Double> has, String key1, String key2) {
+//		double dKey1 = has.get(key1);
+//		double dKey2 = has.get(key2);
+//		
+//		String tmp = key1;
+//		has.
+	}
+	
+	
 }

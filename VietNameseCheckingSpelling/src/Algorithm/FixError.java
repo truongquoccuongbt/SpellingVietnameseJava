@@ -6,6 +6,10 @@ import java.util.Iterator;
 
 public class FixError {
 	private HashSet<String> hSetCandidate;
+	public HashSet<String> gethSetCandidate() {
+		return hSetCandidate;
+	}
+
 	private String token;
 	private Context context;
 	private String candidate = "";
@@ -31,20 +35,18 @@ public class FixError {
 		return this.hSetCandidate.size();
 	}
 	
-	public void GetCandidatesWithContext(Context context, HashMap<String, Integer> dictError) {
-		this.context = context;
+	public void GetCandidatesWithContext(HashMap<Context, Integer> dictError) {
 		this.hSetCandidate.clear();
 		if (dictError.size() > 0) {
-			for (String key : dictError.keySet()) {
+			for (Context key : dictError.keySet()) {
+				this.context = key;
 				if (key.equals(context)) {
 					// nếu có lỗi trong danh sách
 					if (dictError.size() > 0) {
 						// lấy lỗi đầu tiên tìm được với start index
 						this.token = context.getToken();
 						hSetCandidate = Candidate.GetInstance().CreateCandidate(context, false);
-						if (hSetCandidate.size() > 0) {
-							this.candidate = GetElementAtIndexHashSet(hSetCandidate, 0);
-						}
+						this.candidate = WrongWordCandidate.GetInstance().getCandiate();
 					}
 					return;
 				}
@@ -52,7 +54,11 @@ public class FixError {
 		}
 	}
 	
-	private String GetElementAtIndexHashSet(HashSet<String> a, int index) {
+	public String getCandidate() {
+		return candidate;
+	}
+
+	public String GetElementAtIndexHashSet(HashSet<String> a, int index) {
 		int pos = 0;
 		for (Iterator<String> it = a.iterator(); it.hasNext();) {
 			if (pos == index) {

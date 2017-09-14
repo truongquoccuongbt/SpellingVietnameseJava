@@ -106,7 +106,7 @@ public class VNDictionary {
 	public HashSet<String> FindCompoundVnWord_xXx(Context context) {
 		HashSet<String> hSetResult = new HashSet<>();
 		String[] iArr;
-		if (context.getNext().trim().length() > 0 && context.getPre().trim().length() > 0) {
+		if (context.getNext().trim().length() > 0 && context.getPre().trim().length() > 0 && CompoundWordVn.GetInstance().compoundWordVnDict.containsKey(context.getPre().trim().toLowerCase())) {
 			// duyệt qua List<string> là value với key là token
 			ArrayList<String> arr = CompoundWordVn.GetInstance().compoundWordVnDict.get(context.getPre().toLowerCase());
 			for (int i = 0; i < arr.size(); i++) {

@@ -3,7 +3,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.HashSet;
 
+import Algorithm.Context;
 import Algorithm.FindError;
 import Algorithm.FixError;
 import Algorithm.Ngram;
@@ -50,11 +53,53 @@ public class CheckError {
 		FindError.GetInstance().AddSentences(Sentences.GetInstance().SplitSentence(this.input));
 		FindError.GetInstance().Find();
 		
-		int countError = FindError.GetInstance().CountError();
-		System.out.println("Số lỗi: " + countError);
+		FixError.GetInstance().GetCandidatesWithContext(FindError.GetInstance().GetDictContext_ErrorRange());
+		
+//		int countError = FindError.GetInstance().CountError();
+//		System.out.println("Số lỗi: " + countError);
+		FixError();
 	}
 	
-	public void GetCandidate() {
-		FixError.GetInstance().GetCandidatesWithContext(FindError.GetInstance()., dictError);
+	public void FixError() {
+		HashMap<Context, Integer> a = FindError.GetInstance().GetDictContext_ErrorRange();
+		String output;
+		Context tmp;
+		if ( a.size() > 0) {
+			while (a.size() > 0) {
+				tmp = GetElementIndexHashMap(a, 0);
+				int pos = a.get(tmp);
+				this.input = HandleString(pos, FixError.GetInstance().getCandidate(), tmp);
+				a.remove(tmp);
+				FixError.GetInstance().GetCandidatesWithContext(a);
+			}
+//			System.out.println(this.input);
+		}
+		else {
+//			System.out.println(this.input);
+		}
 	}
+	
+	public String HandleString(int pos, String candidate, Context c) {
+		while (this.input.charAt(pos - 1) != ' ') {
+			pos++;
+		}
+		
+		
+		String before = this.input.substring(0, pos);
+		String after = this.input.substring(pos + c.getToken().length(), this.input.length());
+		String output = before + candidate + after;
+		return output;
+	}
+	
+	public Context GetElementIndexHashMap(HashMap<Context, Integer> has, int index) {
+		int i = 0;
+		for (Context c : has.keySet()) {
+			if (i == index) {
+				return c;
+			}
+			i++;
+		}
+		return null;
+	}
+	
 }

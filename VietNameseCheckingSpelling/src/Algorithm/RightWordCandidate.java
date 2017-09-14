@@ -88,13 +88,13 @@ public class RightWordCandidate {
 					// nếu số lượng phần tử còn nhỏ hơn 5
 					if (candidateWithScore.size() < 5) {
 						candidateWithScore.put(candidate, score);
-						candidateWithScore = Candidate.GetInstance().SordDict(candidateWithScore);
+						//candidateWithScore = Candidate.GetInstance().SordDict(candidateWithScore);
 					}
 					// nếu phần tử cuối cùng có số điểm thấp hơn candidate hiện tại
 					else if (candidateWithScore.get(GetLastKeyInCandidateScore(candidateWithScore)) < score) {
 						candidateWithScore.remove(GetLastKeyInCandidateScore(candidateWithScore));
 						candidateWithScore.put(candidate, score);
-						candidateWithScore = Candidate.GetInstance().SordDict(candidateWithScore);
+						//candidateWithScore = Candidate.GetInstance().SordDict(candidateWithScore);
 					}
 				}
 			}

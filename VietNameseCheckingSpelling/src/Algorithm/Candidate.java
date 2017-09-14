@@ -100,12 +100,6 @@ public class Candidate {
 				if (!word[1].equals(context.getToken().toLowerCase()) && word[0].equals(context.getPre()) && word[1].length() > 0) {
 					lstCandidate.add(word[1]);
 				}
-				// check
-				if (key.equals("dịch chợ")) {
-					System.out.println(word[0].equals(context.getToken().toLowerCase()));
-					System.out.println(word[1].equals(context.getNext().toLowerCase()));
-				}
-				/////
 				
 				else if (!word[0].equals(context.getToken().toLowerCase()) && word[1].equals(context.getNext()) && word[0].length() > 0) {
 					lstCandidate.add(word[0]);
@@ -120,7 +114,7 @@ public class Candidate {
 		boolean isLongWord = lenght > 3 ? true : false;
 		int count = 0;
 		
-		//khoong vĂ  khĂ´ng
+		//khoong và không 
 		for (int i = 0; i < lenght; i++) {
 			for (int j = 0; j < cand.length(); j++) {
 				if (syll.charAt(i) == cand.charAt(j)) {
@@ -138,31 +132,86 @@ public class Candidate {
 	/**
 	 * sắp xếp candicate dựa trên số điểm, canđiate có điểm cao nhất sẽ ở vị trí đầu tiên.
 	 */
-	public HashMap<String, Double> SordDict(HashMap<String, Double> dict) {
-		HashMap<String, Double> tmp = new HashMap<>();
-		ArrayList<Double> arrVal = new ArrayList<>(dict.values());
-		ArrayList<String> arrKey = new ArrayList<>(dict.keySet());
-		Collections.sort(arrVal);
-		Iterator<Double> value = arrVal.iterator();
-		Iterator<String> keyIt;
-		String key;
-		Double val, comp1, comp2;
-		while (value.hasNext()) {
-			val = value.next();
-			keyIt = arrKey.iterator();
-			while (keyIt.hasNext()) {
-				key = keyIt.next();
-				comp1 = dict.get(key);
-				comp2 = val;
+//	public HashMap<String, Double> SordDict(HashMap<String, Double> dict) {
+//		HashMap<String, Double> tmp = new HashMap<>();
+//		ArrayList<Double> arrVal = new ArrayList<>(dict.values());
+//		ArrayList<String> arrKey = new ArrayList<>(dict.keySet());
+//		Collections.sort(arrVal);
+//		Iterator<Double> value = arrVal.iterator();
+//		Iterator<String> keyIt;
+//		String key;
+//		Double val, comp1, comp2;
+//		while (value.hasNext()) {
+//			val = value.next();
+//			keyIt = arrKey.iterator();
+//			while (keyIt.hasNext()) {
+//				key = keyIt.next();
+//				comp1 = dict.get(key);
+//				comp2 = val;
+//				
+//				if (comp1 == comp2) {
+//					keyIt.remove();
+//					tmp.put(key, val);
+//					break;
+//				}
+//			}
+//		}
+//		return tmp;
+//	}
+	
+	public String GetCandidate(HashMap<String, Double> dict) {
+		HashMap<String, Double> result = new HashMap<>();
+		String[] keys = new String[dict.size()];
+		Double[] values = new Double[dict.size()];
+		int i = 0;
+		for (String key : dict.keySet()) {
+			keys[i] = key;
+			values[i] = dict.get(key);
+			i++;
+		}
+		
+		i = 0;
+		QuickSort(keys, values, 0, values.length - 1);
+		while (i < keys.length) {
+			result.put(keys[i], values[i]);
+			i++;
+		}
+		return keys[0];
+	}
+	
+	private void QuickSort(String[]keys, Double[] values, int left, int right) {
+		int index = Partition(keys, values, left, right);
+		if (left < index - 1) {
+			QuickSort(keys, values, left, index - 1);
+		}
+		if (index < right) {
+			QuickSort(keys, values, index, right);
+		}
+	}
+	
+	private int Partition(String[] keys, Double[] values, int left, int right) {
+		int i = left, j = right;
+		Double tmp;
+		String tmp1;
+		double pivot = values[(left + right) / 2];
+		while (i <= j) {
+			while (values[i] > pivot)
+				i++;
+			while (values[j] < pivot)
+				j--;
+			if (i <= j) {
+				tmp = values[i];
+				values[i] = values[j];
+				values[j] = tmp;
 				
-				if (comp1 == comp2) {
-					keyIt.remove();
-					tmp.put(key, val);
-					break;
-				}
+				tmp1 = keys[i];
+				keys[i] = keys[j];
+				keys[j] = tmp1;
+				i++;
+				j--;
 			}
 		}
-		return tmp;
+		return i;
 	}
 	
 	public double CalScore_NgramForFindError(Context context) {

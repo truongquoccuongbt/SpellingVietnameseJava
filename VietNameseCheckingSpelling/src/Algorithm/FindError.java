@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 import org.omg.CORBA._IDLTypeStub;
 
 public class FindError {
-	private HashMap<Context, String> dictContext_ErrorString;
+	private HashMap<Context, Integer> dictContext_ErrorString;
 	// số từ trong một câu
 	private String[] wordsInSentence;
 	// từ đang được kiểm tra lỗi
@@ -52,7 +52,7 @@ public class FindError {
 	}
 	
 	public HashMap<Context, Integer> GetDictContext_ErrorRange() {
-		return this.GetDictContext_ErrorRange();
+		return this.dictContext_ErrorRange;
 	}
 	
 	private FindError() {
@@ -120,7 +120,7 @@ public class FindError {
 					}
 					originalContext.CopyForm(context);
 					if (!VNDictionary.GetInstance().IsSyllableVN(iWordReplaced.trim().toLowerCase())) {
-						System.out.println(iWordReplaced);
+//						System.out.println(iWordReplaced);
 						if (i < length - 1) {
 							CheckError(context, i, false);
 						}
@@ -145,7 +145,7 @@ public class FindError {
 							}
 						}		} // end else if right word
 				}
-				start++;
+				start += word.length() + 1;
 			} // end for : duyệt từng từ trong câu
 		}// end for: duyệt từ câu
 		isStopFindError = true;
@@ -153,7 +153,7 @@ public class FindError {
 		for (Context ct : dictContext_ErrorRange.keySet()) {
 //			int a = FindIndexSentenceOfWord(dictContext_ErrorRange.get(ct));
 //			System.out.println(a);
-			dictContext_ErrorString.put(ct, this.arrSentences[FindIndexSentenceOfWord(dictContext_ErrorRange.get(ct))]);
+			dictContext_ErrorString.put(ct, start);
 		}
 	}
 	
