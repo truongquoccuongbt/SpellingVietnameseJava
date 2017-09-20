@@ -105,8 +105,8 @@ public class Ngram {
 	}
 	
 	public void RunFirst() {
-		ReadUni(new File("").getAbsolutePath() + "\\Resources\\filteredUni.txt");
-		ReadBiAmount(new File("").getAbsolutePath() + "\\Resources\\filteredBi.txt");
+		ReadUni(new File("").getAbsolutePath() + "/Resources/filteredUni.txt");
+		ReadBiAmount(new File("").getAbsolutePath() + "/Resources/filteredBi.txt");
 		SumWordInCorpus();
 	}
 }

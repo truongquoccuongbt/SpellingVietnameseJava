@@ -1,17 +1,10 @@
 package Algorithm;
 
-import java.io.BufferedReader;
-import java.io.Console;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.omg.CORBA._IDLTypeStub;
 
 public class FindError {
 	private HashMap<Context, Integer> dictContext_ErrorString;
@@ -120,7 +113,6 @@ public class FindError {
 					}
 					originalContext.CopyForm(context);
 					if (!VNDictionary.GetInstance().IsSyllableVN(iWordReplaced.trim().toLowerCase())) {
-//						System.out.println(iWordReplaced);
 						if (i < length - 1) {
 							CheckError(context, i, false);
 						}

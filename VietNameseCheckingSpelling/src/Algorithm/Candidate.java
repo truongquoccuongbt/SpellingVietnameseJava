@@ -259,11 +259,11 @@ public class Candidate {
 	 * tính điểm cho candidate dựa vào từ ghép
 	 */
 	public double CalScore_CompoundWord(Context context, String candidate) {
-		String _3SyllComWord1 = String.format("{0} {1} {2}", context.getPrePre(), context.getPre(), candidate).trim().toLowerCase();
-		String _3SyllComWord2 = String.format("{0} {1} {2}", context.getPre(), candidate, context.getNext()).trim().toLowerCase();
-		String _3SyllComWord3 = String.format("{0} {1} {2}", candidate, context.getNext(), context.getNextNext()).trim().toLowerCase();
-		String _2SyllComWord1 = String.format("{0} {1}", context.getPre(), candidate);
-		String _2SyllComWord2 = String.format("{0} {1}", candidate, context.getNext()).trim().toLowerCase();
+		String _3SyllComWord1 = String.format("%s %s %s", context.getPrePre(), context.getPre(), candidate).trim().toLowerCase();
+		String _3SyllComWord2 = String.format("%s %s %s", context.getPre(), candidate, context.getNext()).trim().toLowerCase();
+		String _3SyllComWord3 = String.format("%s %s %s", candidate, context.getNext(), context.getNextNext()).trim().toLowerCase();
+		String _2SyllComWord1 = String.format("%s %s", context.getPre(), candidate);
+		String _2SyllComWord2 = String.format("%s %s", candidate, context.getNext()).trim().toLowerCase();
 		
 		if (context.getPrePre().length() > 0 && context.getPre().length() > 0 && VNDictionary.GetInstance().CompoundDict.contains(_3SyllComWord1)) {
 			return MAX_SCORE();

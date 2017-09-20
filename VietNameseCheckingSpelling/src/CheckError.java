@@ -3,6 +3,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -15,6 +17,24 @@ import Algorithm.VNDictionary;
 public class CheckError {
 	private static CheckError instance = new CheckError();
 	private String input;
+	private String output;
+	private String[] arrInput;
+	private ArrayList<Integer> posTokenError;
+	private int countError;
+	
+	public int getCountError() {
+		return countError;
+	}
+
+	public String getOutput() {
+		return output;
+	}
+
+	public void setOutput(String output) {
+		this.output = output;
+	}
+
+	private HashMap<Context, Integer> listError;
 	
 	public static CheckError GetInstance() {
 		return instance;
@@ -26,6 +46,7 @@ public class CheckError {
 	
 	private CheckError() {
 		this.input = "";
+		this.output = "";
 		RunFirst();
 	}
 	
@@ -43,6 +64,8 @@ public class CheckError {
 			while ((line = br.readLine()) != null) {
 				this.input = line;
 			}
+			this.output = new String(this.input);
+			InitArrInput();
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -54,23 +77,38 @@ public class CheckError {
 		FindError.GetInstance().Find();
 		
 		FixError.GetInstance().GetCandidatesWithContext(FindError.GetInstance().GetDictContext_ErrorRange());
-		
-//		int countError = FindError.GetInstance().CountError();
-//		System.out.println("Số lỗi: " + countError);
-		FixError();
+		this.listError = FindError.GetInstance().GetDictContext_ErrorRange();
+		InitPosTokenError();
+		this.countError = FindError.GetInstance().CountError();
+	}
+	
+	private void InitPosTokenError() {
+		this.posTokenError = new ArrayList<>();
+		String[] input = this.input.split(" ");
+		int value;
+		for (Context c : this.listError.keySet()) {
+			value = this.listError.get(c);
+			this.posTokenError.add(FindPosTokenInInput(input, value));
+		}
+	}
+	
+	private void InitArrInput() {
+		String[] tmp = this.input.split(" ");
+		this.arrInput = new String[tmp.length];
+		for (int i = 0; i < tmp.length; i++) {
+			arrInput[i] = tmp[i];
+		}
 	}
 	
 	public void FixError() {
-		HashMap<Context, Integer> a = FindError.GetInstance().GetDictContext_ErrorRange();
-		String output;
 		Context tmp;
-		if ( a.size() > 0) {
-			while (a.size() > 0) {
-				tmp = GetElementIndexHashMap(a, 0);
-				int pos = a.get(tmp);
-				this.input = HandleString(pos, FixError.GetInstance().getCandidate(), tmp);
-				a.remove(tmp);
-				FixError.GetInstance().GetCandidatesWithContext(a);
+		if ( this.listError.size() > 0) {
+			while (this.listError.size() > 0) {
+				tmp = GetElementIndexHashMap(this.listError, 0);
+				int pos = this.listError.get(tmp);
+				this.output = HandleString(pos, FixError.GetInstance().getCandidate(), tmp);
+				this.listError.remove(tmp);
+				FixError.GetInstance().GetCandidatesWithContext(this.listError);
 			}
 //			System.out.println(this.input);
 		}
@@ -80,13 +118,12 @@ public class CheckError {
 	}
 	
 	public String HandleString(int pos, String candidate, Context c) {
-		while (this.input.charAt(pos - 1) != ' ') {
+		while (this.output.charAt(pos - 1) != ' ') {
 			pos++;
 		}
 		
-		
-		String before = this.input.substring(0, pos);
-		String after = this.input.substring(pos + c.getToken().length(), this.input.length());
+		String before = this.output.substring(0, pos);
+		String after = this.output.substring(pos + c.getToken().length(), this.output.length());
 		String output = before + candidate + after;
 		return output;
 	}
@@ -102,4 +139,32 @@ public class CheckError {
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @param input
+	 * @param posChar
+	 * 
+	 * Xác định vị trí sai của một token trong input
+	 * VD: Tôi đị chơi.
+	 * 		posChar = 4 => vị trái token sai: 2 (đị)
+	 * 
+	 */
+	private int FindPosTokenInInput(String[] input, int posChar) {
+		int length = 0;
+		for (int posToken = 0; posToken < input.length; posToken++) {
+			length += input[posToken].length() + 1;
+			if (posChar < length) {
+				return posToken + 1;
+			}
+		}
+		return -1;
+	}
+	
+	public String GetPosTokenError() {
+		String tmp = "";
+		for (int i = 0; i < this.posTokenError.size(); i++) {
+			tmp += this.posTokenError.get(i).toString() + " "; 
+		}
+		return tmp;
+	}
 }
