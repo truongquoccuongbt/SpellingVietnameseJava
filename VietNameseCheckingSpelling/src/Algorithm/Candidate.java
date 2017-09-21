@@ -43,14 +43,14 @@ public class Candidate {
 	/**
 	 * Sinh candidate cho token
 	 */
-	public HashSet<String> CreateCandidate(Context context, boolean isRightError) {
+	public ArrayList<String> CreateCandidate(Context context, boolean isRightError) {
 		if (isRightError) {
 			return RightWordCandidate.GetInstance().CreateCandidate(context);
 		}
 		return WrongWordCandidate.GetInstance().CreateCandidate(context);
 	}
 	
-	public HashSet<String> CreateCandidate(Context context) {
+	public ArrayList<String> CreateCandidate(Context context) {
 		if (VNDictionary.GetInstance().IsSyllableVN(context.getToken())) {
 			return RightWordCandidate.GetInstance().CreateCandidate(context);
 		}
@@ -159,26 +159,6 @@ public class Candidate {
 //		return tmp;
 //	}
 	
-	public String GetCandidate(HashMap<String, Double> dict) {
-		HashMap<String, Double> result = new HashMap<>();
-		String[] keys = new String[dict.size()];
-		Double[] values = new Double[dict.size()];
-		int i = 0;
-		for (String key : dict.keySet()) {
-			keys[i] = key;
-			values[i] = dict.get(key);
-			i++;
-		}
-		
-		i = 0;
-		QuickSort(keys, values, 0, values.length - 1);
-		while (i < keys.length) {
-			result.put(keys[i], values[i]);
-			i++;
-		}
-		return keys[0];
-	}
-	
 	private void QuickSort(String[]keys, Double[] values, int left, int right) {
 		int index = Partition(keys, values, left, right);
 		if (left < index - 1) {
@@ -238,9 +218,9 @@ public class Candidate {
 			return 1;
 		}
 		double lamda1 = 0, lamda2 = 0;
-		if (calBiGram_PreCand < 1E-5 && calBiGram_CandNext < 1E-5) {
-			return 0;
-		}
+//		if (calBiGram_PreCand < 1E-5 && calBiGram_CandNext < 1E-5) {
+//			return 0;
+//		}
 		lamda1 = calBiGram_PreCand / calBiGram_PreToken;
 		lamda2 = calBiGram_CandNext / calBiGram_TokenNext;
 		if (lamda1 > 100 || lamda2 > 100) {

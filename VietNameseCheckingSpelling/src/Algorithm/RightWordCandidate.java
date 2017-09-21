@@ -1,9 +1,17 @@
 package Algorithm;
 
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 public class RightWordCandidate {
 	private static RightWordCandidate instance = new RightWordCandidate();
@@ -46,13 +54,13 @@ public class RightWordCandidate {
 	 * @param nextnext
 	 * @param isMajuscule
 	 */
-	public HashSet<String> CreateCandidate(Context context) {
+	public ArrayList<String> CreateCandidate(Context context) {
 		//check
 		if (context.getToken().equals("khộng")) {
 			System.out.println();
 		}
 		////////////////////////////////////////////
-		HashSet<String> result = new HashSet<>();
+		ArrayList<String> result = new ArrayList<>();
 		// giữ cặp <candidate, điểm> để so sánh
 		HashMap<String, Double> candidateWithScore = new HashMap<>();
 		// giữ cặp <candidate, điểm>  với những candidate là từ ghép 3 âm tiết.
@@ -114,11 +122,33 @@ public class RightWordCandidate {
 			}
 		}
 		else {
-			for (String key : candidateWithScore.keySet()) {
+			LinkedHashMap<String, Double> tmp  = SortCandidateWithScore(candidateWithScore);
+			for (String key : tmp.keySet()) {
 				result.add(key);
 			}
 		}
 		return result;
+	}
+	
+	private LinkedHashMap<String, Double> SortCandidateWithScore(HashMap<String, Double> candidateWithScore) {
+		Set<Entry<String, Double>> entries = candidateWithScore.entrySet();
+		Comparator<Entry<String, Double>> valueComparator = new Comparator<Map.Entry<String, Double>>() {
+			
+			@Override
+			public int compare(Entry<String, Double> o1, Entry<String, Double> o2) {
+				Double c1 = o1.getValue();
+				Double c2 = o2.getValue();
+				return c2.compareTo(c1);
+			}
+		};
+		
+		List<Entry<String, Double>> listOfEntries = new ArrayList<Entry<String, Double>>(entries);
+		Collections.sort(listOfEntries, valueComparator);
+		LinkedHashMap<String, Double> sortByValue = new LinkedHashMap<>(listOfEntries.size());
+		for (Entry<String, Double> entry : listOfEntries) {
+			sortByValue.put(entry.getKey(), entry.getValue());
+		}
+		return sortByValue;
 	}
 	
 	private HashSet<String> UnionWith(HashSet<String> a, HashSet<String> b) {

@@ -1,21 +1,19 @@
 package Algorithm;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-
-import javax.naming.spi.DirStateFactory.Result;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 public class WrongWordCandidate {
 	private static WrongWordCandidate instance = new WrongWordCandidate();
-	private String candiate;
-	public String getCandiate() {
-		return candiate;
-	}
-
-	public void setCandiate(String candiate) {
-		this.candiate = candiate;
-	}
 
 	public static WrongWordCandidate GetInstance() {
 		return instance;
@@ -35,8 +33,8 @@ public class WrongWordCandidate {
 	 * @param nextnext
 	 * @param isMajuscule
 	 */
-	public HashSet<String> CreateCandidate(Context context) {
-		HashSet<String> result = new HashSet<>();
+	public ArrayList<String> CreateCandidate(Context context) {
+		ArrayList<String> result = new ArrayList<>();
 		// giữ cặp <candidate, điểm> để so sánh
 		HashMap<String, Double> candidateWithScore = new HashMap<>();
 		// giữ cặp <candidate, điểm> với những candidate là từ ghép 3 âm tiết.
@@ -69,13 +67,13 @@ public class WrongWordCandidate {
 					if (candidateWithScore.size() < 5) {
 						candidateWithScore.put(candidate, score);
 						//candidateWithScore = Candidate.GetInstance().SordDict(candidateWithScore);
-						this.candiate = Candidate.GetInstance().GetCandidate(candidateWithScore);
+						//this.candiate = Candidate.GetInstance().GetCandidate(candidateWithScore);
 					}
 					else if (candidateWithScore.get(GetLastKeyInCandidateScore(candidateWithScore)) < score) {
 						candidateWithScore.remove(GetLastKeyInCandidateScore(candidateWithScore));
 						candidateWithScore.put(candidate, score);
 						//candidateWithScore = Candidate.GetInstance().SordDict(candidateWithScore);
-						this.candiate = Candidate.GetInstance().GetCandidate(candidateWithScore);
+						//this.candiate = Candidate.GetInstance().GetCandidate(candidateWithScore);
 					}
 				}
 			}
@@ -87,11 +85,37 @@ public class WrongWordCandidate {
 			}
 		}
 		else {
-			for (String key : candidateWithScore.keySet()) {
+			LinkedHashMap<String, Double> tmp = SortCandidateWithScore(candidateWithScore);
+			for (String key : tmp.keySet()) {
 				result.add(key);
 			}
 		}
 		return result;
+	}
+	
+	/**
+	 * 
+	 * sort hashmap
+	 */
+	private LinkedHashMap<String, Double> SortCandidateWithScore(HashMap<String, Double> candidateWithScore) {
+		Set<Entry<String, Double>> entries = candidateWithScore.entrySet();
+		Comparator<Entry<String, Double>> valueComparator = new Comparator<Map.Entry<String, Double>>() {
+			
+			@Override
+			public int compare(Entry<String, Double> o1, Entry<String, Double> o2) {
+				Double c1 = o1.getValue();
+				Double c2 = o2.getValue();
+				return c2.compareTo(c1);
+			}
+		};
+		
+		List<Entry<String, Double>> listOfEntries = new ArrayList<Entry<String, Double>>(entries);
+		Collections.sort(listOfEntries, valueComparator);
+		LinkedHashMap<String, Double> sortByValue = new LinkedHashMap<>(listOfEntries.size());
+		for (Entry<String, Double> entry : listOfEntries) {
+			sortByValue.put(entry.getKey(), entry.getValue());
+		}
+		return sortByValue;
 	}
 	
 	private HashSet<String> UnionWith(HashSet<String> a, HashSet<String> b) {
@@ -113,14 +137,4 @@ public class WrongWordCandidate {
 		}
 		return key;
 	}
-	
-	private void ChangePosInHashMap(HashMap<String, Double> has, String key1, String key2) {
-//		double dKey1 = has.get(key1);
-//		double dKey2 = has.get(key2);
-//		
-//		String tmp = key1;
-//		has.
-	}
-	
-	
 }

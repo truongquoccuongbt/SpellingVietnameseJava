@@ -1,12 +1,15 @@
 package Algorithm;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
 public class FixError {
-	private HashSet<String> hSetCandidate;
-	public HashSet<String> gethSetCandidate() {
+	private ArrayList<String> hSetCandidate;
+	
+
+	public ArrayList<String> gethSetCandidate() {
 		return hSetCandidate;
 	}
 
@@ -20,7 +23,7 @@ public class FixError {
 	}
 	
 	public FixError() {
-		hSetCandidate = new HashSet<>();
+		hSetCandidate = new ArrayList<>();
 	}
 	
 	public String GetToken() {
@@ -46,7 +49,7 @@ public class FixError {
 						// lấy lỗi đầu tiên tìm được với start index
 						this.token = context.getToken();
 						hSetCandidate = Candidate.GetInstance().CreateCandidate(context, false);
-						this.candidate = WrongWordCandidate.GetInstance().getCandiate();
+						
 					}
 					return;
 				}

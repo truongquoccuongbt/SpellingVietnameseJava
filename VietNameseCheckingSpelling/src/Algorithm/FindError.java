@@ -1,5 +1,6 @@
 package Algorithm;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -28,7 +29,7 @@ public class FindError {
 	// độ dài câu hiện tại
 	private int length;
 	// Hashset chứa những từ gợi ý cho lỗi đang kiểm tra
-	private HashSet<String> hSetCand;
+	private ArrayList<String> hSetCand;
 	// Từ điển với key là ngử cảnh, value là câu lỗi
 	private HashMap<Context, Integer> dictContext_ErrorRange;
 	// vị trí đầu đoạn.
@@ -52,7 +53,7 @@ public class FindError {
 		this.isStopFindError = false;
 		this.dictContext_ErrorString = new HashMap<>();
 		this.originalContext = new Context();
-		this.hSetCand = new HashSet<>();
+		this.hSetCand = new ArrayList<>();
 		this.dictContext_ErrorRange = new HashMap<>();
 	}
 	
@@ -84,6 +85,7 @@ public class FindError {
 			wordsInSentence = this.sentence.split(" ");
 			this.originWords = this.sentence.split(" ");
 			this.length = this.wordsInSentence.length;
+			boolean flags = false;
 			for (int i = 0; i < this.length; i++) {
 				word = this.wordsInSentence[i];
 				originalContext.setToken(word.toLowerCase());
@@ -135,7 +137,8 @@ public class FindError {
 							if (HasCandidate(context, true)) {
 								AddError(context, true);
 							}
-						}		} // end else if right word
+						}		
+					} // end else if right word
 				}
 				start += word.length() + 1;
 			} // end for : duyệt từng từ trong câu
@@ -174,7 +177,7 @@ public class FindError {
 				// nếu không, thì từ hiện tại là sai
 				if (hSetCand.size() > 0) {
 					context.CopyForm(originalContext);
-					context.setNext(GetElementAtIndexHashSet(hSetCand, 0));
+					context.setNext(hSetCand.get(0));
 					
 					// dùng candidate tốt nhất để làm ngữ cảnh
 					// kiểm tra từ hiện tại có sai do từ sau hay không
@@ -182,7 +185,7 @@ public class FindError {
 					if (HasCandidate(context, isRightError)) {
 						// từ hiện tại sai mà không phải do từ phía sau
 						// tránh làm sai những gram phía sau
-						wordsInSentence[i] = GetElementAtIndexHashSet(hSetCand, 0);
+						wordsInSentence[i] = hSetCand.get(0);
 						context.CopyForm(originalContext);
 						AddError(context, isRightError);
 					}

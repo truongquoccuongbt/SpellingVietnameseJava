@@ -21,6 +21,7 @@ public class CheckError {
 	private String[] arrInput;
 	private ArrayList<Integer> posTokenError;
 	private int countError;
+	private int posCurrent;
 	
 	public int getCountError() {
 		return countError;
@@ -47,6 +48,7 @@ public class CheckError {
 	private CheckError() {
 		this.input = "";
 		this.output = "";
+		this.posCurrent = 0;
 		RunFirst();
 	}
 	
@@ -105,10 +107,10 @@ public class CheckError {
 		if ( this.listError.size() > 0) {
 			while (this.listError.size() > 0) {
 				tmp = GetElementIndexHashMap(this.listError, 0);
-				int pos = this.listError.get(tmp);
-				this.output = HandleString(pos, FixError.GetInstance().getCandidate(), tmp);
-				this.listError.remove(tmp);
 				FixError.GetInstance().GetCandidatesWithContext(this.listError);
+				int pos = this.listError.get(tmp);
+				this.output = HandleString(pos, FixError.GetInstance().gethSetCandidate(), tmp);
+				this.listError.remove(tmp);
 			}
 //			System.out.println(this.input);
 		}
@@ -117,14 +119,19 @@ public class CheckError {
 		}
 	}
 	
-	public String HandleString(int pos, String candidate, Context c) {
-		while (this.output.charAt(pos - 1) != ' ') {
-			pos++;
-		}
-		
+	public String HandleString(int pos, ArrayList<String> arrCandidate, Context c) {
+		pos += this.posCurrent;
 		String before = this.output.substring(0, pos);
 		String after = this.output.substring(pos + c.getToken().length(), this.output.length());
-		String output = before + candidate + after;
+		String candidate = "";
+		for (int i = 0; i < arrCandidate.size(); i++) {
+			candidate += arrCandidate.get(i) + ", ";
+			if (i == 2) break;
+		}
+		candidate = candidate.substring(0, candidate.length() - 2) + " ";
+		String mid = "<e> " + c.getToken() + ": "  + candidate + "</e>";
+		this.posCurrent += mid.length() - c.getToken().length();
+		this.output = before + mid + after;
 		return output;
 	}
 	
