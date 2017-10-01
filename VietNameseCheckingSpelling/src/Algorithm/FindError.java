@@ -4,13 +4,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import Tokenizer.Tokenizer;
 
 public class FindError {
 	private HashMap<Context, Integer> dictContext_ErrorString;
 	// số từ trong một câu
-	private String[] wordsInSentence;
+	private String[] tokensInSentence;
 	// từ đang được kiểm tra lỗi
 	private String word;
 	//
@@ -82,37 +85,38 @@ public class FindError {
 		for (int j = 0; j < this.arrSentences.length; j++) {
 			if (isStopFindError) break;
 			this.sentence = arrSentences[j].trim();
-			wordsInSentence = this.sentence.split(" ");
-			this.originWords = this.sentence.split(" ");
-			this.length = this.wordsInSentence.length;
-			boolean flags = false;
-			for (int i = 0; i < this.length; i++) {
-				word = this.wordsInSentence[i];
+			List<String> ls = Tokenizer.RunTokenize(this.sentence);
+			ls.add(0, "<s>");
+			ls.remove(ls.size() - 1);
+			ls.add(ls.size(),"</e>");
+			tokensInSentence = ConvertListToArrString(ls);
+//			wordsInSentence = this.sentence.split(" ");
+//			this.originWords = this.sentence.split(" ");
+			this.length = this.tokensInSentence.length;
+			for (int i = 1; i < this.length - 1; i++) {
+				word = this.tokensInSentence[i];
 				originalContext.setToken(word.toLowerCase());
 				
 				//Kiểm tra các ký tự đặc biệt, mail, số, tên riếng
 				// Nếu có chứa thì bỏ qua
-				Matcher m = patternCheckSpecial.matcher(originalContext.getToken());
-				if (m.matches()) {
+				if (new Tokenizer().IsExistRegexRules(word)) {
 					continue;
 				}
 				// Viết hoa giữa câu thì bỏ qua vì là danh từ riêng
-				if (Character.isUpperCase(word.trim().charAt(0)) && i != 0) {
+				if (Character.isUpperCase(word.trim().charAt(0)) && i != 1) {
 					continue;
 				}
 				
 				else {
-					Context context = new Context(i, wordsInSentence);
+					Context context = new Context(i, tokensInSentence);
 					iWordReplaced = context.getToken().replaceAll(StringConstant.GetInstance().patternSignSentence, "");
 					if (!word.contains(iWordReplaced) || iWordReplaced.length() == 0) {
 						
 					}
-					if (wordsInSentence[i].length() != iWordReplaced.length()) {
+					if (tokensInSentence[i].length() != iWordReplaced.length()) {
 						context.setToken(iWordReplaced);
 					}
-					if (!word.contains("\r")) {
-						
-					}
+				
 					originalContext.CopyForm(context);
 					if (!VNDictionary.GetInstance().IsSyllableVN(iWordReplaced.trim().toLowerCase())) {
 						if (i < length - 1) {
@@ -146,8 +150,6 @@ public class FindError {
 		isStopFindError = true;
 		
 		for (Context ct : dictContext_ErrorRange.keySet()) {
-//			int a = FindIndexSentenceOfWord(dictContext_ErrorRange.get(ct));
-//			System.out.println(a);
 			dictContext_ErrorString.put(ct, start);
 		}
 	}
@@ -157,8 +159,8 @@ public class FindError {
 		if (context.getWordCount() == 1 && isRightError) {
 			return;
 		}
-		if (this.wordsInSentence[i + 1].length() > 0) {
-			if (Character.isUpperCase(this.wordsInSentence[i + 1].charAt(0))) {
+		if (this.tokensInSentence[i + 1].length() > 0) {
+			if (Character.isUpperCase(this.tokensInSentence[i + 1].charAt(0))) {
 				if (HasCandidate(context, isRightError)) {
 					AddError(context, isRightError);
 				}
@@ -166,7 +168,7 @@ public class FindError {
 			}
 			
 			// Kiểm tra từ hiện tại có sai do từ tiếp theo hay không
-			context.GetContext(i + 1, wordsInSentence);
+			context.GetContext(i + 1, tokensInSentence);
 		
 			// Nếu ngữ cảnh từ tiếp theo, có chứa từ hiện tại thì kiểm tra 
 			if (context.toString().contains(originalContext.getToken())) {
@@ -185,7 +187,7 @@ public class FindError {
 					if (HasCandidate(context, isRightError)) {
 						// từ hiện tại sai mà không phải do từ phía sau
 						// tránh làm sai những gram phía sau
-						wordsInSentence[i] = hSetCand.get(0);
+						tokensInSentence[i] = hSetCand.get(0);
 						context.CopyForm(originalContext);
 						AddError(context, isRightError);
 					}
@@ -264,5 +266,13 @@ public class FindError {
 			indexSentence++;
 		}
 		return -1;
+	}
+	
+	private String[] ConvertListToArrString(List<String> ls) {
+		String[] arrStr = new String[ls.size()];
+		for (int i = 0; i < ls.size(); i++) {
+			arrStr[i] = ls.get(i);
+		}
+		return arrStr;
 	}
 }

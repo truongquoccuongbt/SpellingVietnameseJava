@@ -1,7 +1,6 @@
 package Tokenizer;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -115,5 +114,17 @@ public class Tokenizer {
 			tokens.addAll(RunTokenize(token.substring(endMatch, token.length())));
 
 		return tokens;
+	}
+	
+	public boolean IsExistRegexRules(String token) {
+		List<String> regexs = RegexRules.GetRegexList();
+		for (String regex : regexs) {
+			Pattern pattern = Pattern.compile(regex);
+			Matcher matcher = pattern.matcher(token);
+			if (matcher.find()) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

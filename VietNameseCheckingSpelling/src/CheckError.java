@@ -67,7 +67,7 @@ public class CheckError {
 				this.input = line;
 			}
 			this.output = new String(this.input);
-			InitArrInput();
+		//	InitArrInput();
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -94,13 +94,13 @@ public class CheckError {
 		}
 	}
 	
-	private void InitArrInput() {
-		String[] tmp = this.input.split(" ");
-		this.arrInput = new String[tmp.length];
-		for (int i = 0; i < tmp.length; i++) {
-			arrInput[i] = tmp[i];
-		}
-	}
+//	private void InitArrInput() {
+//		String[] tmp = this.input.split(" ");
+//		this.arrInput = new String[tmp.length];
+//		for (int i = 0; i < tmp.length; i++) {
+//			arrInput[i] = tmp[i];
+//		}
+//	}
 	
 	public void FixError() {
 		Context tmp;

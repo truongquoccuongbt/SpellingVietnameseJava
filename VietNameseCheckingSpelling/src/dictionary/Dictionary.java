@@ -284,131 +284,131 @@ public class Dictionary {
 		return dictionaryName;
 	}
 
-	public static HashMap<String, Integer> CreateN_Gram(N_gramType type) {
-		erroes = new HashSet<>();
-		// normalizedDocs = new HashMap<>();
-		normalizedDocs = N_Gram.CreateCountOfN_Gram(type);
-		if (dictionaryAlphabet == null)
-			GetDictionaryAlphabet();
-		if (type == N_gramType.BIGRAM_NEW) {
-			for (Entry<String, String> entry : dictionaryAlphabet.entrySet()) {
-				if (entry.getKey().split(" ").length == 2 && !normalizedDocs.containsKey(entry.getKey())) {
-					normalizedDocs.put(entry.getKey(), 0);
-				}
-			}
-			File file = new File(normaliezd_Path);
-			String[] filePaths = file.list();
-			int count = 0;
-			for (String filePath : filePaths) {
-				if(!filePath.contains(".segUET"))continue;
-				System.out.println("LINK :" + filePath);
-				HashSet<String>data=Provider.ReadFileHS(normaliezd_Path + filePath);
-				for (String line : data) {
-					try {
-						String [] tokens=line.split(" ");
-						for(String word:tokens){
-							String []words=word.split("_");
-							if(words.length==2){
-								String pharse = word.replace("_"," ");
-								if (normalizedDocs.containsKey(pharse)) {
-									count = (int) normalizedDocs.get(pharse) + 1;
-									normalizedDocs.remove(pharse);
-									normalizedDocs.put(pharse, count);
-									continue;
-								}
-							}
-						}
-					} catch (Exception ex) {
-						System.out.println("LINK :" + filePath + "ERROR" + ex.getMessage() + "line : " + line);
-						erroes.add(filePath);
-						continue;
-					}
-				}
-			}
-		} else if (type == N_gramType.UNIGRAM) {
-			for (Entry<String, String> entry : dictionaryAlphabet.entrySet()) {
-				if (entry.getKey().split(" ").length == 1 && !normalizedDocs.containsKey(entry.getKey())) {
-					normalizedDocs.put(entry.getKey(), 0);
-				}
-
-			}
-			File file = new File(normaliezd_Path);
-			String[] filePaths = file.list();
-			int count = 0;
-			for (String filePath : filePaths) {
-				System.out.println("LINK :" + filePath);
-				for (String line : Provider.ReadFileHS(normaliezd_Path + filePath)) {
-					try {
-						List<String> tokens = Tokenizer.RunTokenize(line);
-						for (int i = 0; i < tokens.size(); i++) {
-
-							String pharse = tokens.get(i);
-							if (normalizedDocs.containsKey(pharse)) {
-								count = (int) normalizedDocs.get(pharse) + 1;
-								normalizedDocs.remove(pharse);
-								normalizedDocs.put(pharse, count);
-								continue;
-							}
-						}
-					} catch (Exception ex) {
-						System.out.println("LINK :" + filePath + "ERROR" + ex.getMessage() + "line : " + line);
-						erroes.add(filePath);
-						continue;
-					}
-				}
-			}
-		} else if (type == N_gramType.BIGRAM) {
-			for (Entry<String, String> entry : dictionaryAlphabet.entrySet()) {
-				if (entry.getKey().split(" ").length == 2 && !normalizedDocs.containsKey(entry.getKey())) {
-					normalizedDocs.put(entry.getKey(), 0);
-				}
-			}
-			File file = new File(normaliezd_Path);
-			String[] filePaths = file.list();
-			int count = 0;
-			for (String filePath : filePaths) {
-				System.out.println("LINK :" + filePath);
-				for (String line : Provider.ReadFileHS(normaliezd_Path + filePath)) {
-					try {
-						List<String> tokens = Tokenizer.RunTokenize(line);
-						for (int i = 0; i < tokens.size() - 1; i++) {
-							String pharse = tokens.get(i) + StringConst.SPACE + tokens.get(i + 1);
-							if (normalizedDocs.containsKey(pharse)) {
-								count = (int) normalizedDocs.get(pharse) + 1;
-								normalizedDocs.remove(pharse);
-								normalizedDocs.put(pharse, count);
-								continue;
-							}
-						}
-					} catch (Exception ex) {
-						System.out.println("LINK :" + filePath + "ERROR" + ex.getMessage() + "line : " + line);
-						erroes.add(filePath);
-						continue;
-					}
-				}
-			}
-		}
-		/*
-		 * File file = new File(normaliezd_Path); String[] filePaths =
-		 * file.list(); int count = 0; for (String filePath : filePaths) {
-		 * System.out.println("LINK :" + filePath); for (String line :
-		 * Provider.ReadFileHS(normaliezd_Path + filePath)) { try { List<String>
-		 * tokens = Tokenizer.RunTokenize(line); for (int i = 0; i <
-		 * tokens.size() - 1; i++) {
-		 * 
-		 * String pharse = ""; switch (type) { case BIGRAM_NEW: { pharse =
-		 * tokens.get(i) + StringConst.SPACE + tokens.get(i + 1) +
-		 * StringConst.SPACE + tokens.get(i + 2); break; } case BIGRAM: { pharse
-		 * = tokens.get(i) + StringConst.SPACE + tokens.get(i + 1); break; }
-		 * case UNIGRAM: { pharse = tokens.get(i); ; break; } } if
-		 * (normalizedDocs.containsKey(pharse)) { count = (int)
-		 * normalizedDocs.get(pharse) + 1; normalizedDocs.remove(pharse);
-		 * normalizedDocs.put(pharse, count); continue; } } } catch (Exception
-		 * ex) { System.out.println("LINK :" + filePath + "ERROR" +
-		 * ex.getMessage() + "line : " + line); erroes.add(filePath); continue;
-		 * } } }
-		 */
-		return normalizedDocs;
-	}
+//	public static HashMap<String, Integer> CreateN_Gram(N_gramType type) {
+//		erroes = new HashSet<>();
+//		// normalizedDocs = new HashMap<>();
+//		normalizedDocs = N_Gram.CreateCountOfN_Gram(type);
+//		if (dictionaryAlphabet == null)
+//			GetDictionaryAlphabet();
+//		if (type == N_gramType.BIGRAM_NEW) {
+//			for (Entry<String, String> entry : dictionaryAlphabet.entrySet()) {
+//				if (entry.getKey().split(" ").length == 2 && !normalizedDocs.containsKey(entry.getKey())) {
+//					normalizedDocs.put(entry.getKey(), 0);
+//				}
+//			}
+//			File file = new File(normaliezd_Path);
+//			String[] filePaths = file.list();
+//			int count = 0;
+//			for (String filePath : filePaths) {
+//				if(!filePath.contains(".segUET"))continue;
+//				System.out.println("LINK :" + filePath);
+//				HashSet<String>data=Provider.ReadFileHS(normaliezd_Path + filePath);
+//				for (String line : data) {
+//					try {
+//						String [] tokens=line.split(" ");
+//						for(String word:tokens){
+//							String []words=word.split("_");
+//							if(words.length==2){
+//								String pharse = word.replace("_"," ");
+//								if (normalizedDocs.containsKey(pharse)) {
+//									count = (int) normalizedDocs.get(pharse) + 1;
+//									normalizedDocs.remove(pharse);
+//									normalizedDocs.put(pharse, count);
+//									continue;
+//								}
+//							}
+//						}
+//					} catch (Exception ex) {
+//						System.out.println("LINK :" + filePath + "ERROR" + ex.getMessage() + "line : " + line);
+//						erroes.add(filePath);
+//						continue;
+//					}
+//				}
+//			}
+//		} else if (type == N_gramType.UNIGRAM) {
+//			for (Entry<String, String> entry : dictionaryAlphabet.entrySet()) {
+//				if (entry.getKey().split(" ").length == 1 && !normalizedDocs.containsKey(entry.getKey())) {
+//					normalizedDocs.put(entry.getKey(), 0);
+//				}
+//
+//			}
+//			File file = new File(normaliezd_Path);
+//			String[] filePaths = file.list();
+//			int count = 0;
+//			for (String filePath : filePaths) {
+//				System.out.println("LINK :" + filePath);
+//				for (String line : Provider.ReadFileHS(normaliezd_Path + filePath)) {
+//					try {
+//						List<String> tokens = Tokenizer.RunTokenize(line);
+//						for (int i = 0; i < tokens.size(); i++) {
+//
+//							String pharse = tokens.get(i);
+//							if (normalizedDocs.containsKey(pharse)) {
+//								count = (int) normalizedDocs.get(pharse) + 1;
+//								normalizedDocs.remove(pharse);
+//								normalizedDocs.put(pharse, count);
+//								continue;
+//							}
+//						}
+//					} catch (Exception ex) {
+//						System.out.println("LINK :" + filePath + "ERROR" + ex.getMessage() + "line : " + line);
+//						erroes.add(filePath);
+//						continue;
+//					}
+//				}
+//			}
+//		} else if (type == N_gramType.BIGRAM) {
+//			for (Entry<String, String> entry : dictionaryAlphabet.entrySet()) {
+//				if (entry.getKey().split(" ").length == 2 && !normalizedDocs.containsKey(entry.getKey())) {
+//					normalizedDocs.put(entry.getKey(), 0);
+//				}
+//			}
+//			File file = new File(normaliezd_Path);
+//			String[] filePaths = file.list();
+//			int count = 0;
+//			for (String filePath : filePaths) {
+//				System.out.println("LINK :" + filePath);
+//				for (String line : Provider.ReadFileHS(normaliezd_Path + filePath)) {
+//					try {
+//						List<String> tokens = Tokenizer.RunTokenize(line);
+//						for (int i = 0; i < tokens.size() - 1; i++) {
+//							String pharse = tokens.get(i) + StringConst.SPACE + tokens.get(i + 1);
+//							if (normalizedDocs.containsKey(pharse)) {
+//								count = (int) normalizedDocs.get(pharse) + 1;
+//								normalizedDocs.remove(pharse);
+//								normalizedDocs.put(pharse, count);
+//								continue;
+//							}
+//						}
+//					} catch (Exception ex) {
+//						System.out.println("LINK :" + filePath + "ERROR" + ex.getMessage() + "line : " + line);
+//						erroes.add(filePath);
+//						continue;
+//					}
+//				}
+//			}
+//		}
+//		/*
+//		 * File file = new File(normaliezd_Path); String[] filePaths =
+//		 * file.list(); int count = 0; for (String filePath : filePaths) {
+//		 * System.out.println("LINK :" + filePath); for (String line :
+//		 * Provider.ReadFileHS(normaliezd_Path + filePath)) { try { List<String>
+//		 * tokens = Tokenizer.RunTokenize(line); for (int i = 0; i <
+//		 * tokens.size() - 1; i++) {
+//		 * 
+//		 * String pharse = ""; switch (type) { case BIGRAM_NEW: { pharse =
+//		 * tokens.get(i) + StringConst.SPACE + tokens.get(i + 1) +
+//		 * StringConst.SPACE + tokens.get(i + 2); break; } case BIGRAM: { pharse
+//		 * = tokens.get(i) + StringConst.SPACE + tokens.get(i + 1); break; }
+//		 * case UNIGRAM: { pharse = tokens.get(i); ; break; } } if
+//		 * (normalizedDocs.containsKey(pharse)) { count = (int)
+//		 * normalizedDocs.get(pharse) + 1; normalizedDocs.remove(pharse);
+//		 * normalizedDocs.put(pharse, count); continue; } } } catch (Exception
+//		 * ex) { System.out.println("LINK :" + filePath + "ERROR" +
+//		 * ex.getMessage() + "line : " + line); erroes.add(filePath); continue;
+//		 * } } }
+//		 */
+//		return normalizedDocs;
+//	}
 
 }
