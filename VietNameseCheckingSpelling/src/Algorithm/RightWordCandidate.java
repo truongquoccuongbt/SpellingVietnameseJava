@@ -55,11 +55,6 @@ public class RightWordCandidate {
 	 * @param isMajuscule
 	 */
 	public ArrayList<String> CreateCandidate(Context context) {
-		//check
-		if (context.getToken().equals("khộng")) {
-			System.out.println();
-		}
-		////////////////////////////////////////////
 		ArrayList<String> result = new ArrayList<>();
 		// giữ cặp <candidate, điểm> để so sánh
 		HashMap<String, Double> candidateWithScore = new HashMap<>();
@@ -67,7 +62,7 @@ public class RightWordCandidate {
 		HashMap<String, Double> prioritizedCandidatesWithScore = new HashMap<>();
 		// candidate chưa chọn lọc dựa vào số điểm
 		HashSet<String> hSetCandidate = new HashSet<>();
-		
+		hSetCandidate.add(context.getToken());
 		hSetCandidate = UnionWith(hSetCandidate, Candidate.GetInstance().CreateCandidateByNgram_NoUseLamdaExp(context));
 		hSetCandidate = UnionWith(hSetCandidate, Candidate.GetInstance().CreateCandByCompoundWord(context));
 		// giá trị lamda có được do thống kê
@@ -85,10 +80,10 @@ public class RightWordCandidate {
 		for (Iterator<String> it = hSetCandidate.iterator(); it.hasNext();) {
 			candidate = it.next();
 			//check
-			if (candidate.equals("không")) {
+			if (candidate.equals("viết")) {
 				System.out.println();
 			}
-			//////////////////////////
+			//////////////////////////////////////////////////////////
 			S = Candidate.GetInstance().CalScore_Similarity(context.getToken(), candidate);
 			if (S >= Candidate.GetInstance().LIM_SIMILARITY()) {
 				D = Candidate.GetInstance().CalScore_CompoundWord(context, candidate);

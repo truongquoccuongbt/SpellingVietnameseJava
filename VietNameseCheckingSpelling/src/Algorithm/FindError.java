@@ -32,7 +32,7 @@ public class FindError {
 	// độ dài câu hiện tại
 	private int length;
 	// Hashset chứa những từ gợi ý cho lỗi đang kiểm tra
-	private ArrayList<String> hSetCand;
+	private ArrayList<String> hSetCand = new ArrayList<>();
 	// Từ điển với key là ngử cảnh, value là câu lỗi
 	private HashMap<Context, Integer> dictContext_ErrorRange;
 	// vị trí đầu đoạn.
@@ -56,7 +56,6 @@ public class FindError {
 		this.isStopFindError = false;
 		this.dictContext_ErrorString = new HashMap<>();
 		this.originalContext = new Context();
-		this.hSetCand = new ArrayList<>();
 		this.dictContext_ErrorRange = new HashMap<>();
 	}
 	
@@ -108,6 +107,11 @@ public class FindError {
 				}
 				
 				else {
+					// check
+					if (word.equals("đan")) {
+						System.out.println();
+					}
+					///////////////////////////////////
 					Context context = new Context(i, tokensInSentence);
 					iWordReplaced = context.getToken().replaceAll(StringConstant.GetInstance().patternSignSentence, "");
 					if (!word.contains(iWordReplaced) || iWordReplaced.length() == 0) {
@@ -172,12 +176,17 @@ public class FindError {
 		
 			// Nếu ngữ cảnh từ tiếp theo, có chứa từ hiện tại thì kiểm tra 
 			if (context.toString().contains(originalContext.getToken())) {
-				hSetCand.clear();
-				hSetCand = Candidate.GetInstance().CreateCandidate(context, isRightError);
-				
+				this.hSetCand.clear();
+//				hSetCand = Candidate.GetInstance().CreateCandidate(context, isRightError);
+				this.hSetCand = CopyArrayList(this.hSetCand, Candidate.GetInstance().CreateCandidate(context, isRightError));
+				//check
+				if (this.hSetCand.contains("báo")) {
+					System.out.println();
+				}
+				///////////////////////////////////////////
 				// từ thứ  i + 1 có candidate thay thế
 				// nếu không, thì từ hiện tại là sai
-				if (hSetCand.size() > 0) {
+				if (this.hSetCand.size() > 0) {
 					context.CopyForm(originalContext);
 					context.setNext(hSetCand.get(0));
 					
@@ -187,9 +196,11 @@ public class FindError {
 					if (HasCandidate(context, isRightError)) {
 						// từ hiện tại sai mà không phải do từ phía sau
 						// tránh làm sai những gram phía sau
-						tokensInSentence[i] = hSetCand.get(0);
-						context.CopyForm(originalContext);
-						AddError(context, isRightError);
+						if (!this.hSetCand.get(0).equals(context.getToken())) {
+							tokensInSentence[i] = hSetCand.get(0);
+							context.CopyForm(originalContext);
+							AddError(context, isRightError);
+						}
 					}
 					else {
 						context.CopyForm(originalContext);
@@ -231,10 +242,10 @@ public class FindError {
 	private boolean HasCandidate(Context context, boolean isRightError) {
 		this.hSetCand.clear();
 		if (isRightError) {
-			hSetCand = RightWordCandidate.GetInstance().CreateCandidate(context);
+			hSetCand = CopyArrayList(hSetCand, RightWordCandidate.GetInstance().CreateCandidate(context));
 		}
 		else {
-			hSetCand = WrongWordCandidate.GetInstance().CreateCandidate(context);
+			hSetCand = CopyArrayList(hSetCand, WrongWordCandidate.GetInstance().CreateCandidate(context));
 		}
 		if (hSetCand.size() > 0) {
 			return true;
@@ -274,5 +285,16 @@ public class FindError {
 			arrStr[i] = ls.get(i);
 		}
 		return arrStr;
+	}
+	
+	private void CheckErrorWithPreviousToken() {
+		
+	}
+	
+	private ArrayList<String> CopyArrayList(ArrayList<String> empty, ArrayList<String> copy) {
+		for (String str : copy) {
+			empty.add(str);
+		}
+		return empty;
 	}
 }

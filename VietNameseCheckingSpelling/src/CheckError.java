@@ -112,10 +112,6 @@ public class CheckError {
 				this.output = HandleString(pos, FixError.GetInstance().gethSetCandidate(), tmp);
 				this.listError.remove(tmp);
 			}
-//			System.out.println(this.input);
-		}
-		else {
-//			System.out.println(this.input);
 		}
 	}
 	
@@ -124,14 +120,22 @@ public class CheckError {
 		String before = this.output.substring(0, pos);
 		String after = this.output.substring(pos + c.getToken().length(), this.output.length());
 		String candidate = "";
-		for (int i = 0; i < arrCandidate.size(); i++) {
-			candidate += arrCandidate.get(i) + ", ";
-			if (i == 2) break;
+		if (arrCandidate.size() > 0) {
+			for (int i = 0; i < arrCandidate.size(); i++) {
+				candidate += arrCandidate.get(i) + ", ";
+				if (i == 2) break;
+			}
+			candidate = candidate.substring(0, candidate.length() - 2) + " ";
+			String mid = "<e> " + c.getToken() + ": "  + candidate + "</e>";
+			this.posCurrent += mid.length() - c.getToken().length();
+			this.output = before + mid + after;
 		}
-		candidate = candidate.substring(0, candidate.length() - 2) + " ";
-		String mid = "<e> " + c.getToken() + ": "  + candidate + "</e>";
-		this.posCurrent += mid.length() - c.getToken().length();
-		this.output = before + mid + after;
+		else {
+			candidate = " ";
+			String mid = "<e> " + c.getToken() + ": "  + candidate + "</e>";
+			this.posCurrent += mid.length() - c.getToken().length();
+			this.output = before + mid + after;
+		}
 		return output;
 	}
 	

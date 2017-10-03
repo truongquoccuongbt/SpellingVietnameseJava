@@ -92,9 +92,8 @@ public class Candidate {
 	public HashSet<String> CreateCandidateByNgram_NoUseLamdaExp(Context context) {
 		HashSet<String> lstCandidate = new HashSet<>();
 		for (String key : Ngram.GetInstance().get_biAmount().keySet()) {
-			if (key.contains(Ngram.GetInstance().START_STRING()) || key.contains(Ngram.GetInstance().END_STRING()))
-				continue;
-			
+//			if (key.contains(Ngram.GetInstance().START_STRING()) || key.contains(Ngram.GetInstance().END_STRING()))
+//				continue;
 			if (IsLikely(context.getToken(), key) && (key.contains(context.getPre()) || key.contains(context.getNext()))) {
 				String[] word = key.split(" ");
 				if (!word[1].equals(context.getToken().toLowerCase()) && word[0].equals(context.getPre()) && word[1].length() > 0) {
@@ -113,7 +112,7 @@ public class Candidate {
 		int lenght = syll.length();
 		boolean isLongWord = lenght > 3 ? true : false;
 		int count = 0;
-		
+		syll = syll.toLowerCase();
 		//khoong và không 
 		for (int i = 0; i < lenght; i++) {
 			for (int j = 0; j < cand.length(); j++) {
@@ -223,13 +222,13 @@ public class Candidate {
 //		}
 		lamda1 = calBiGram_PreCand / calBiGram_PreToken;
 		lamda2 = calBiGram_CandNext / calBiGram_TokenNext;
-		if (lamda1 > 100 || lamda2 > 100) {
+		if (lamda1 > 1.0 || lamda2 > 1.0) {
 			return 1;
 		}
-		if (lamda1 > 80 || lamda2 > 80) {
+		if (lamda1 > 0.8 || lamda2 > 0.8) {
 			return 0.8;
 		}
-		if (lamda1 > 50 || lamda2 > 50) {
+		if (lamda1 > 0.5 || lamda2 > 0.5) {
 			return 0.5;
 		}
 		return 0;

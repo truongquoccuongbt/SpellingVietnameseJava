@@ -170,6 +170,7 @@ public class VNDictionary {
 	public HashSet<String> FindCompoundVnWord_xX(Context context) {
 		HashSet<String> hSetResult = new HashSet<>();
 		String[] tmp;
+		HashMap<String, ArrayList<String>> tmp1 = CompoundWordVn.GetInstance().compoundWordVnDict;
 		if (context.getPre().trim().length() > 0 && CompoundWordVn.GetInstance().compoundWordVnDict.containsKey(context.getPre().trim().toLowerCase())) {
 			for (String str : CompoundWordVn.GetInstance().compoundWordVnDict.get(context.getPre().trim().toLowerCase())) {
 				tmp = str.trim().split(" ");

@@ -40,7 +40,7 @@ public class RegexRules {
 
 	public static final String DECREE = "(([1-9][0-9]+|0?[1-9])(\\/)((([12]\\d{3})(\\/))?)(" + DECREE_SYMBOL + "))";
 
-	public static final String PUNCTUATION = "[^\\w\\s\\da-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]";
+	public static final String PUNCTUATION = "[^\\w\\s\\da-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]";
 
 	public static final String REFERENT_DECREE = "(((tại khoản|tại Khoản )([1-9][0-9]+|0?[1-9])((( và Khoản )([1-9][0-9]+|0?[1-9]))*)"
 			+ "( Điều )([1-9][0-9]+|0?[1-9]))" + ALPHABET + DECREE + "((" + ALPHABET + FULL_DATE + ")?)" + ")";

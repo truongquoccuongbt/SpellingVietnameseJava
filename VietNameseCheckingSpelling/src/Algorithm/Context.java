@@ -118,7 +118,7 @@ public class Context {
 			preOpen = this.pre.replaceAll(StringConstant.GetInstance().patternOPEN, "");
 			boolean isUpper = Character.isUpperCase(this.pre.charAt(0)) ? true : false;
 			
-			if (preSPEC.length() < this.pre.length() || preClose.length() < this.pre.length() || (isUpper && iWord != 1)) {
+			if (preSPEC.length() < this.pre.length() || preClose.length() < this.pre.length() || (isUpper && iWord != 2)) {
 				this.pre = this.prePre = "";
 				FindNext_NextNext(iWord, words);
 				return;

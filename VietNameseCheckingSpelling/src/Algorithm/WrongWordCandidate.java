@@ -34,6 +34,11 @@ public class WrongWordCandidate {
 	 * @param isMajuscule
 	 */
 	public ArrayList<String> CreateCandidate(Context context) {
+		//check
+		if (context.getToken().equals("đan")) {
+			System.out.println();
+		}
+		/////////////////////////
 		ArrayList<String> result = new ArrayList<>();
 		// giữ cặp <candidate, điểm> để so sánh
 		HashMap<String, Double> candidateWithScore = new HashMap<>();

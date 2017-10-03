@@ -49,7 +49,6 @@ public class FixError {
 						// lấy lỗi đầu tiên tìm được với start index
 						this.token = context.getToken();
 						hSetCandidate = Candidate.GetInstance().CreateCandidate(context, false);
-						
 					}
 					return;
 				}
