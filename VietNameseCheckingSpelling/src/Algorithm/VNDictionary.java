@@ -129,7 +129,7 @@ public class VNDictionary {
 		HashSet<String> hSetResult = new HashSet<>();
 		String[] iArr;
 		ArrayList<String> arr = CompoundWordVn.GetInstance().compoundWordVnDict.get(context.getPrePre().toLowerCase());
-		if (context.getPrePre().trim().length() > 0 && context.getPrePre().trim().length() > 0 && CompoundWordVn.GetInstance().compoundWordVnDict.containsKey(context.getPrePre().trim().toLowerCase())) {
+		if (context.getPrePre().trim().length() > 0 && CompoundWordVn.GetInstance().compoundWordVnDict.containsKey(context.getPrePre().trim().toLowerCase())) {
 			for (int i = 0; i < arr.size(); i++) {
 				iArr = arr.get(i).trim().split(" ");
 				// tá»« ghĂ©p cĂ³ 3 Ă¢m tiáº¿t dáº¡ng: w_2 w_1 iArr[1]

@@ -170,7 +170,7 @@ public class StringConstant {
     public String patternSignSentence = "[-|/|\\|>|<|\\[|\\]|,|\"|(|)|“|”|.!?;:…]";
     public String patternCheckWord = "[-|\\/|\\|>|<|\\[|\\]|,|\"|(|)|“|”|@|#|$|%|^|&|\\*|\\d]";
 
-    public String patternSPEC = "[-|\\/|\\|\\[|\\]||@|#|$|%|^|&|\\*|\\d|]";
+    public String patternSPEC = "[-|\\|\\[|\\]||@|#|$|%|^|&|\\*|\\d|]";
     public String patternOPEN = "[(|“]";
     public String patternCLOSE = "[,|)|”|.!?;:…]";
     

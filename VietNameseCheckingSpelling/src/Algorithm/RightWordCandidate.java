@@ -79,11 +79,6 @@ public class RightWordCandidate {
 		String candidate;
 		for (Iterator<String> it = hSetCandidate.iterator(); it.hasNext();) {
 			candidate = it.next();
-			//check
-			if (candidate.equals("viết")) {
-				System.out.println();
-			}
-			//////////////////////////////////////////////////////////
 			S = Candidate.GetInstance().CalScore_Similarity(context.getToken(), candidate);
 			if (S >= Candidate.GetInstance().LIM_SIMILARITY()) {
 				D = Candidate.GetInstance().CalScore_CompoundWord(context, candidate);
