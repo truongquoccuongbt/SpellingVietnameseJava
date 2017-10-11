@@ -56,6 +56,7 @@ public class FixError {
 		}
 	}
 	
+	
 	public String getCandidate() {
 		return candidate;
 	}

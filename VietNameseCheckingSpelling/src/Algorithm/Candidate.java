@@ -197,7 +197,7 @@ public class Candidate {
 		double calBiGram_PreToken = Ngram.GetInstance().CalBigram(context.getPre(), context.getToken());
 		double calBiGram_TokenNext = Ngram.GetInstance().CalBigram(context.getToken(), context.getNext());
 		
-		double ret = (0.5 * calBiGram_PreToken + 0.5 * calBiGram_TokenNext) * 155;
+		double ret = (0.5 * calBiGram_PreToken + 0.5 * calBiGram_TokenNext) * 1E3;
 		return ret;
 	}
 	

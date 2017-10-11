@@ -50,6 +50,7 @@ public class Ngram {
 		int Cw1 = 0;
 		int Cw1w2 = 0;
 		double alpha = 0.1;
+		
 		if (_uniAmount.containsKey(w1.toLowerCase())) {
 			Cw1 = _uniAmount.get(w1.toLowerCase());
 		}
