@@ -47,6 +47,10 @@ public class FindError {
 	// Hashmap chứa cancadidate của context
 	private HashMap<Context, ArrayList<String>> hMapCandidate;
 	
+	public HashMap<Context, ArrayList<String>> gethMapCandidate() {
+		return hMapCandidate;
+	}
+
 	private static FindError instance = new FindError();
 	
 	public static FindError GetInstance() {
@@ -117,11 +121,6 @@ public class FindError {
 				}
 				
 				else {
-					//check
-					if (word.equals("Tôi")) {
-						System.out.println();
-					}
-					///////////////////////////////////////////
 					Context context = new Context(i, tokensInSentence);
 					iWordReplaced = context.getToken().replaceAll(StringConstant.GetInstance().patternSignSentence, "");
 					if (!word.contains(iWordReplaced) || iWordReplaced.length() == 0) {
@@ -188,61 +187,73 @@ public class FindError {
 			if (context.toString().contains(originalContext.getToken())) {
 				if (!VNDictionary.GetInstance().IsSyllableVN(context.getToken())) {
 					this.hSetCand.clear();
-					this.hSetCand = CopyArrayList(this.hSetCand, Candidate.GetInstance().CreateCandidate(context, false));
-					this.hMapCandidate.put(context, hSetCand);
+					this.hSetCand = CopyArrayList(this.hSetCand, WrongWordCandidate.GetInstance().CreateCandidate(context));
+					//this.hMapCandidate.put(context, hSetCand);
 				}
 				else {
-					this.hSetCand.clear();
-	//				hSetCand = Candidate.GetInstance().CreateCandidate(context, isRightError);
-					this.hSetCand = CopyArrayList(this.hSetCand, Candidate.GetInstance().CreateCandidate(context, true));
-					this.hMapCandidate.put(context, hSetCand);
-				}
-				// từ thứ  i + 1 có candidate thay thế
-				// nếu không, thì từ hiện tại là sai
-				if (!this.hSetCand.contains(context.getToken())) {
-					for (int y = 0; y < this.hSetCand.size(); y++) {
-						context.CopyForm(originalContext);
-						context.setNext(hSetCand.get(y));
-						
-						// dùng candidate tốt nhất để làm ngữ cảnh
-						// kiểm tra từ hiện tại có sai do từ sau hay không
-						ArrayList<String> hSetCandTmp = Candidate.GetInstance().CreateCandidate(context, isRightError);
-						
-						if (hSetCandTmp.size() > 0 && !context.getToken().equals(hSetCandTmp.get(0))) {
-							// từ hiện tại sai mà không phải do từ phía sau
-							// tránh làm sai những gram phía sau
+					if (!RightWordCandidate.GetInstance().CheckRightWord(context)) {
+						this.hSetCand.clear();
+		//				hSetCand = Candidate.GetInstance().CreateCandidate(context, isRightError);
+						this.hSetCand = CopyArrayList(this.hSetCand, RightWordCandidate.GetInstance().CreateCandidate1(context));
+						this.hMapCandidate.put(context, hSetCand);
+					
+					// từ thứ  i + 1 có candidate thay thế
+					// nếu không, thì từ hiện tại là sai
+//					if (!this.hSetCand.get(0).equals(context.getToken())) {
+						for (int y = 0; y < this.hSetCand.size(); y++) {
+							context.CopyForm(originalContext);
+							context.setNext(hSetCand.get(y));
 							
-							tokensInSentence[i] = hSetCandTmp.get(0);
-							context.CopyForm(originalContext);
-							AddError(context, isRightError);
-						}
-						else {
-							context.CopyForm(originalContext);
-							hSetCandTmp = Candidate.GetInstance().CreateCandidate(context, isRightError);
-							// nếu từ hiện tại có candidate thay thế thì thêm vào đó thành một lỗi
-							if (hSetCandTmp.size() > 0 && !hSetCandTmp.get(0).equals(context.getToken())) {
+							// dùng candidate tốt nhất để làm ngữ cảnh
+							// kiểm tra từ hiện tại có sai do từ sau hay không
+							ArrayList<String> hSetCandTmp = Candidate.GetInstance().CreateCandidate(context, isRightError);
+							this.hMapCandidate.put(context, hSetCandTmp);
+							if (hSetCandTmp.size() > 0 && !context.getToken().equals(hSetCandTmp.get(0))) {
+								// từ hiện tại sai mà không phải do từ phía sau
+								// tránh làm sai những gram phía sau
+								
+								tokensInSentence[i] = hSetCandTmp.get(0);
+								context.CopyForm(originalContext);
 								AddError(context, isRightError);
+							}
+							else {
+								context.CopyForm(originalContext);
+								hSetCandTmp = Candidate.GetInstance().CreateCandidate(context, isRightError);
+								// nếu từ hiện tại có candidate thay thế thì thêm vào đó thành một lỗi
+								if (hSetCandTmp.size() > 0 && !hSetCandTmp.get(0).equals(context.getToken())) {
+									AddError(context, isRightError);
+								}
 							}
 						}
 					}
-				}
-				else {
-					context.CopyForm(originalContext);
-					
-					ArrayList<String> hSetTmp = Candidate.GetInstance().CreateCandidate(context, isRightError);
-					// Nếu từ hiện tại có candidate thay thế thì thêm vào đó thành một lỗi
-					if (hSetTmp.size() > 0 && !hSetTmp.get(0).equals(context.getToken())) {
+					else {
+						context.CopyForm(originalContext);
+						ArrayList<String> hSetTmp = Candidate.GetInstance().CreateCandidate(context, isRightError);
+						this.hMapCandidate.put(context, hSetTmp);
 						AddError(context, isRightError);
 					}
 				}
+				
+				
+				
+//				}
+//				else {
+//					context.CopyForm(originalContext);
+//					
+//					ArrayList<String> hSetTmp = RightWordCandidate.GetInstance().CreateCandidate(context);
+//					// Nếu từ hiện tại có candidate thay thế thì thêm vào đó thành một lỗi
+//					if (hSetTmp.size() > 0 && !hSetTmp.get(0).equals(context.getToken())) {
+//						AddError(context, isRightError);
+//					}
+//				}
 			}
-			else {
-				context.CopyForm(originalContext);
-				// Nếu từ hiện tại có candidate thay thế thì thêm vào đó thành một lỗi
-				if (HasCandidate(context, isRightError)) {
-					AddError(context, isRightError);
-				}
-			}
+//			else {
+//				context.CopyForm(originalContext);
+//				// Nếu từ hiện tại có candidate thay thế thì thêm vào đó thành một lỗi
+//				if (HasCandidate(context, isRightError)) {
+//					AddError(context, isRightError);
+//				}
+//			}
 		}
 	}
 	

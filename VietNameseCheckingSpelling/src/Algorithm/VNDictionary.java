@@ -101,7 +101,7 @@ public class VNDictionary {
 	}
 	
 	/**
-	 * trả về từ ghép liền sau token dạng X-1 X
+	 * trả về từ ghép liền sau token dạng x-1 X x+1
 	 */
 	public HashSet<String> FindCompoundVnWord_xXx(Context context) {
 		HashSet<String> hSetResult = new HashSet<>();
@@ -117,6 +117,25 @@ public class VNDictionary {
 						hSetResult.add(iArr[0]);
 					}
 				}
+			}
+		}
+		return hSetResult;
+	}
+	
+	
+	public HashSet<String> FindCompoundVnWordCaseFirstTokenInXXX(Context context) {
+		HashSet<String> hSetResult = new HashSet<>();
+		String value = context.getToken() + " " + context.getNext();
+		ArrayList<String> lsKey = new ArrayList<>();
+
+		if (context.getNext().trim().length() > 0 && context.getPre().trim().length() > 0 && 
+				CompoundWordVn.GetInstance().CheckValueInArrLisInDict(value)) {
+			lsKey = CompoundWordVn.GetInstance().GetKeyByValueInArrayList(value);
+		}
+		
+		if (lsKey.size() > 0) {
+			for (String str : lsKey) {
+				hSetResult.add(str);
 			}
 		}
 		return hSetResult;

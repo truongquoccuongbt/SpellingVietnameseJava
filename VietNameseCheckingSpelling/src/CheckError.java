@@ -5,8 +5,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import Algorithm.Context;
 import Algorithm.FindError;
@@ -22,6 +29,8 @@ public class CheckError {
 	private ArrayList<Integer> posTokenError;
 	private int countError;
 	private int posCurrent;
+	private HashMap<Context, Integer> listError;
+	private HashMap<Context, ArrayList<String>> listCandidate;
 	
 	public int getCountError() {
 		return countError;
@@ -34,8 +43,6 @@ public class CheckError {
 	public void setOutput(String output) {
 		this.output = output;
 	}
-
-	private HashMap<Context, Integer> listError;
 	
 	public static CheckError GetInstance() {
 		return instance;
@@ -77,8 +84,9 @@ public class CheckError {
 	public void Check() {
 		FindError.GetInstance().AddSentences(Sentences.GetInstance().SplitSentence(this.input));
 		FindError.GetInstance().Find();
+		this.listCandidate = FindError.GetInstance().gethMapCandidate();
 		
-		FixError.GetInstance().GetCandidatesWithContext(FindError.GetInstance().GetDictContext_ErrorRange());
+		//FixError.GetInstance().GetCandidatesWithContext(FindError.GetInstance().GetDictContext_ErrorRange());
 		this.listError = FindError.GetInstance().GetDictContext_ErrorRange();
 		InitPosTokenError();
 		this.countError = FindError.GetInstance().CountError();
@@ -107,9 +115,9 @@ public class CheckError {
 		if ( this.listError.size() > 0) {
 			while (this.listError.size() > 0) {
 				tmp = GetElementIndexHashMap(this.listError, 0);
-				FixError.GetInstance().GetCandidatesWithContext(this.listError);
+				//FixError.GetInstance().GetCandidatesWithContext(this.listError);
 				int pos = this.listError.get(tmp);
-				this.output = HandleString(pos, FixError.GetInstance().gethSetCandidate(), tmp);
+				this.output = HandleString(pos, this.listCandidate.get(tmp), tmp);
 				this.listError.remove(tmp);
 			}
 		}
@@ -117,6 +125,7 @@ public class CheckError {
 	
 	public String HandleString(int pos, ArrayList<String> arrCandidate, Context c) {
 		pos += this.posCurrent;
+
 		String before = this.output.substring(0, pos);
 		String after = this.output.substring(pos + c.getToken().length(), this.output.length());
 		String candidate = "";
@@ -177,5 +186,26 @@ public class CheckError {
 			tmp += this.posTokenError.get(i).toString() + " "; 
 		}
 		return tmp;
+	}
+	
+	private LinkedHashMap<String, Double> SortListError(HashMap<String, Double> listError) {
+		Set<Entry<String, Double>> entries = listError.entrySet();
+		Comparator<Entry<String, Double>> valueComparator = new Comparator<Map.Entry<String, Double>>() {
+			
+			@Override
+			public int compare(Entry<String, Double> o1, Entry<String, Double> o2) {
+				Double c1 = o1.getValue();
+				Double c2 = o2.getValue();
+				return c2.compareTo(c1);
+			}
+		};
+		
+		List<Entry<String, Double>> listOfEntries = new ArrayList<Entry<String, Double>>(entries);
+		Collections.sort(listOfEntries, valueComparator);
+		LinkedHashMap<String, Double> sortByValue = new LinkedHashMap<>(listOfEntries.size());
+		for (Entry<String, Double> entry : listOfEntries) {
+			sortByValue.put(entry.getKey(), entry.getValue());
+		}
+		return sortByValue;
 	}
 }

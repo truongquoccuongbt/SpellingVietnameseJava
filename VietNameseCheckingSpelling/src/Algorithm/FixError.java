@@ -60,10 +60,6 @@ public class FixError {
 	public String getCandidate() {
 		return candidate;
 	}
-	
-	private void GetCandidateWithPreviousToken() {
-		
-	}
 
 	public String GetElementAtIndexHashSet(HashSet<String> a, int index) {
 		int pos = 0;

@@ -74,6 +74,19 @@ public class Candidate {
 		return hset;
 	}
 	
+	public HashSet<String> CreateCandInCaseMoreWrongToken(Context context) {
+		HashSet<String> hSet = new HashSet<>();
+		// xxx
+		UnionWith(hSet, VNDictionary.GetInstance().FindCompoundVNWord_Xxx(context));
+		UnionWith(hSet, VNDictionary.GetInstance().FindCompoundVnWordCaseFirstTokenInXXX(context));
+		
+		// xx
+		UnionWith(hSet, VNDictionary.GetInstance().FindCompoundVnWord_xX(context));
+		UnionWith(hSet, VNDictionary.GetInstance().FindCompoundVnWord_Xx(context));
+		return hSet;
+		
+	}
+	
 	private HashSet<String> UnionWith(HashSet<String> a, HashSet<String> b) {
 		HashSet<String> c = new HashSet<>(a);
 		String tmp;

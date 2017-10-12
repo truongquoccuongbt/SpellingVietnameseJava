@@ -41,4 +41,26 @@ public class CompoundWordVn {
 			e.printStackTrace();
 		}
 	}
+	
+	// kiểm tra xem từng giá trị có trong arraylist trong từ điển hay không
+	public boolean CheckValueInArrLisInDict(String value) {
+		for (String key : this.compoundWordVnDict.keySet()) {
+			ArrayList<String> lsValue = this.compoundWordVnDict.get(key);
+			if (lsValue.contains(value)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public ArrayList<String> GetKeyByValueInArrayList(String value) {
+		ArrayList<String> result = new ArrayList<>();
+		for (String key : this.compoundWordVnDict.keySet()) {
+			ArrayList<String> lsValue = this.compoundWordVnDict.get(key);
+			if (lsValue.contains(value)) {
+				result.add(key);
+			}
+		}
+		return result;
+	}
 }

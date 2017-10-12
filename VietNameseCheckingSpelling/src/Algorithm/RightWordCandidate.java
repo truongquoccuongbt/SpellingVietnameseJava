@@ -120,6 +120,61 @@ public class RightWordCandidate {
 		return result;
 	}
 	
+	public ArrayList<String> CreateCandidate1(Context context) {
+		ArrayList<String> result = new ArrayList<>();
+		HashMap<String, Double> candidateWithScore = new HashMap<>();
+		HashSet<String> hSetCandidates = new HashSet<>();
+		
+		hSetCandidates.add(context.getToken());
+		hSetCandidates = UnionWith(hSetCandidates, Candidate.GetInstance().CreateCandInCaseMoreWrongToken(context));
+		hSetCandidates = UnionWith(hSetCandidates, Candidate.GetInstance().CreateCandidateByNgram_NoUseLamdaExp(context));
+		double lamda1 = 0.3;
+		double lamda2 = 0.3;
+		double lamda3 = 0.4;
+		double score = 0;
+		//Dictionary
+		double D = 0;
+		// Language model
+		double L = 0.0;
+		// Similarity
+		double S = 0;
+		String candidate;
+		for (Iterator<String> it = hSetCandidates.iterator(); it.hasNext();) {
+			candidate = it.next();
+			S = Candidate.GetInstance().CalScore_Similarity(context.getToken(), candidate);
+			if (S >= Candidate.GetInstance().LIM_SIMILARITY()) {
+				D = Candidate.GetInstance().CalScore_CompoundWord(context, candidate);
+				L = Candidate.GetInstance().CalScore_Ngram(context, candidate);
+				
+				score = lamda1 * D + lamda2 * L + lamda3 * S;
+				
+				if (score >=Candidate.GetInstance().MAX_SCORE()) {
+					score = Candidate.GetInstance().MAX_SCORE();
+				}
+				// ngưỡng để chọn candidate có được do thống kê
+				if (score > Candidate.GetInstance().LIM_SCORE()) {
+					// nếu số lượng phần tử còn nhỏ hơn 5
+					if (candidateWithScore.size() < 5) {
+						candidateWithScore.put(candidate, score);
+						//candidateWithScore = Candidate.GetInstance().SordDict(candidateWithScore);
+					}
+					// nếu phần tử cuối cùng có số điểm thấp hơn candidate hiện tại
+					else if (candidateWithScore.get(GetLastKeyInCandidateScore(candidateWithScore)) < score) {
+						candidateWithScore.remove(GetLastKeyInCandidateScore(candidateWithScore));
+						candidateWithScore.put(candidate, score);
+						//candidateWithScore = Candidate.GetInstance().SordDict(candidateWithScore);
+					}
+				}
+			}
+		}
+		LinkedHashMap<String, Double> tmp  = SortCandidateWithScore(candidateWithScore);
+		for (String key : tmp.keySet()) {
+			result.add(key);
+		}
+		return result;
+	}
+	
+	
 	private LinkedHashMap<String, Double> SortCandidateWithScore(HashMap<String, Double> candidateWithScore) {
 		Set<Entry<String, Double>> entries = candidateWithScore.entrySet();
 		Comparator<Entry<String, Double>> valueComparator = new Comparator<Map.Entry<String, Double>>() {
