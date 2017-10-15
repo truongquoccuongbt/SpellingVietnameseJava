@@ -31,6 +31,7 @@ public class CheckError {
 	private int posCurrent;
 	private HashMap<Context, Integer> listError;
 	private HashMap<Context, ArrayList<String>> listCandidate;
+	private int posBefore;
 	
 	public int getCountError() {
 		return countError;
@@ -56,6 +57,7 @@ public class CheckError {
 		this.input = "";
 		this.output = "";
 		this.posCurrent = 0;
+		this.posBefore = -1;
 		RunFirst();
 	}
 	
@@ -112,20 +114,25 @@ public class CheckError {
 	
 	public void FixError() {
 		Context tmp;
+		
 		if ( this.listError.size() > 0) {
-			while (this.listError.size() > 0) {
-				tmp = GetElementIndexHashMap(this.listError, 0);
-				//FixError.GetInstance().GetCandidatesWithContext(this.listError);
-				int pos = this.listError.get(tmp);
-				this.output = HandleString(pos, this.listCandidate.get(tmp), tmp);
-				this.listError.remove(tmp);
+			LinkedHashMap<Context , Integer> tmp1 = SortListError(this.listError);
+//			while (tmp1.size() > 0) {
+//				tmp = GetElementIndexHashMap(this.listError, 0);
+//				//FixError.GetInstance().GetCandidatesWithContext(this.listError);
+//				int pos = this.listError.get(tmp);
+//				this.output = HandleString(pos, this.listCandidate.get(tmp), tmp);
+//				this.listError.remove(tmp);
+//			}
+			for (Context con : tmp1.keySet()) {
+				int pos = tmp1.get(con);
+				this.output = HandleString(pos, this.listCandidate.get(con), con);
 			}
 		}
 	}
 	
 	public String HandleString(int pos, ArrayList<String> arrCandidate, Context c) {
 		pos += this.posCurrent;
-
 		String before = this.output.substring(0, pos);
 		String after = this.output.substring(pos + c.getToken().length(), this.output.length());
 		String candidate = "";
@@ -145,6 +152,7 @@ public class CheckError {
 			this.posCurrent += mid.length() - c.getToken().length();
 			this.output = before + mid + after;
 		}
+		posBefore = pos;
 		return output;
 	}
 	
@@ -188,22 +196,22 @@ public class CheckError {
 		return tmp;
 	}
 	
-	private LinkedHashMap<String, Double> SortListError(HashMap<String, Double> listError) {
-		Set<Entry<String, Double>> entries = listError.entrySet();
-		Comparator<Entry<String, Double>> valueComparator = new Comparator<Map.Entry<String, Double>>() {
+	private LinkedHashMap<Context, Integer> SortListError(HashMap<Context, Integer> listError) {
+		Set<Entry<Context, Integer>> entries = listError.entrySet();
+		Comparator<Entry<Context, Integer>> valueComparator = new Comparator<Map.Entry<Context, Integer>>() {
 			
 			@Override
-			public int compare(Entry<String, Double> o1, Entry<String, Double> o2) {
-				Double c1 = o1.getValue();
-				Double c2 = o2.getValue();
-				return c2.compareTo(c1);
+			public int compare(Entry<Context, Integer> o1, Entry<Context, Integer> o2) {
+				Integer c1 = o1.getValue();
+				Integer c2 = o2.getValue();
+				return c1.compareTo(c2);
 			}
 		};
 		
-		List<Entry<String, Double>> listOfEntries = new ArrayList<Entry<String, Double>>(entries);
+		List<Entry<Context, Integer>> listOfEntries = new ArrayList<Entry<Context, Integer>>(entries);
 		Collections.sort(listOfEntries, valueComparator);
-		LinkedHashMap<String, Double> sortByValue = new LinkedHashMap<>(listOfEntries.size());
-		for (Entry<String, Double> entry : listOfEntries) {
+		LinkedHashMap<Context, Integer> sortByValue = new LinkedHashMap<>(listOfEntries.size());
+		for (Entry<Context, Integer> entry : listOfEntries) {
 			sortByValue.put(entry.getKey(), entry.getValue());
 		}
 		return sortByValue;

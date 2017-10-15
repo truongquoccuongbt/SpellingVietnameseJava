@@ -125,7 +125,7 @@ public class VNDictionary {
 	
 	public HashSet<String> FindCompoundVnWordCaseFirstTokenInXXX(Context context) {
 		HashSet<String> hSetResult = new HashSet<>();
-		String value = context.getToken() + " " + context.getNext();
+		String value = context.getNext() + " " + context.getNextNext();
 		ArrayList<String> lsKey = new ArrayList<>();
 
 		if (context.getNext().trim().length() > 0 && context.getPre().trim().length() > 0 && 
@@ -174,7 +174,7 @@ public class VNDictionary {
 			// duyệt qua tất cả trường hợp, với value là token
 			for (String str : CompoundWordVn.GetInstance().compoundWordVnDict.keySet()) {
 				if (!str.equals(context.getToken().toLowerCase()) && 
-					CompoundWordVn.GetInstance().compoundWordVnDict.containsValue(context.getNext()) &&
+					CompoundWordVn.GetInstance().CheckValueInArrLisInDict(context.getToken()) &&
 					Candidate.GetInstance().IsLikely(context.getToken(), str)) {
 					hSetResult.add(str);
 				}

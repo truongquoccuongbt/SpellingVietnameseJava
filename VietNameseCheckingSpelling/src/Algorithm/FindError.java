@@ -195,7 +195,8 @@ public class FindError {
 						this.hSetCand.clear();
 		//				hSetCand = Candidate.GetInstance().CreateCandidate(context, isRightError);
 						this.hSetCand = CopyArrayList(this.hSetCand, RightWordCandidate.GetInstance().CreateCandidate1(context));
-						this.hMapCandidate.put(context, hSetCand);
+						//this.hMapCandidate.put(context, hSetCand);
+						//AddHmapCandidate(hMapCandidate, context, this.hSetCand);
 					
 					// từ thứ  i + 1 có candidate thay thế
 					// nếu không, thì từ hiện tại là sai
@@ -207,7 +208,8 @@ public class FindError {
 							// dùng candidate tốt nhất để làm ngữ cảnh
 							// kiểm tra từ hiện tại có sai do từ sau hay không
 							ArrayList<String> hSetCandTmp = Candidate.GetInstance().CreateCandidate(context, isRightError);
-							this.hMapCandidate.put(context, hSetCandTmp);
+							//this.hMapCandidate.put(context, hSetCandTmp);
+							AddHmapCandidate(hMapCandidate, context, hSetCandTmp);
 							if (hSetCandTmp.size() > 0 && !context.getToken().equals(hSetCandTmp.get(0))) {
 								// từ hiện tại sai mà không phải do từ phía sau
 								// tránh làm sai những gram phía sau
@@ -256,38 +258,6 @@ public class FindError {
 //			}
 		}
 	}
-	
-//	private void CheckError1(Context context, int i, boolean isRightError) {
-//		// Ngữ cảnh chỉ có một từ nhưng thuộc trường hợp sai ngữ cảnh
-//		if (context.getWordCount() == 1 && isRightError) {
-//			return;
-//		}
-//		if (this.tokensInSentence[i + 1].length() > 0) {
-//			if (Character.isUpperCase(this.tokensInSentence[i + 1].charAt(0))) {
-//				if (HasCandidate(context, isRightError)) {
-//					AddError(context, isRightError);
-//				}
-//				return;
-//			}
-//			
-//			context.GetContext(i + 1, tokensInSentence);
-//			if (context.toString().contains(this.originalContext.getToken())) {
-//				if (!VNDictionary.GetInstance().IsSyllableVN(context.getToken())) {
-//					this.hSetCand.clear();
-//					this.hSetCand = CopyArrayList(this.hSetCand, Candidate.GetInstance().CreateCandidate(context, false));
-//					this.hMapCandidate.put(context, hSetCand);
-//				}
-//				else {
-//					this.hSetCand.clear();
-//		//			hSetCand = Candidate.GetInstance().CreateCandidate(context, isRightError);
-//					this.hSetCand = CopyArrayList(this.hSetCand, Candidate.GetInstance().CreateCandidate(context, true));
-//					this.hMapCandidate.put(context, hSetCand);
-//				}
-//				
-//				if ()
-//			}
-//		}
-//	}
 	
 	private String GetElementAtIndexHashSet(HashSet<String> a, int index) {
 		int pos = 0;
@@ -360,5 +330,19 @@ public class FindError {
 			empty.add(str);
 		}
 		return empty;
+	}
+	
+	private void AddHmapCandidate(HashMap<Context, ArrayList<String>> hMapCandidate, Context key, ArrayList<String> value) {
+		if (hMapCandidate.containsKey(key)) {
+			ArrayList<String> tmp = hMapCandidate.get(key);
+			for (String str : value) {
+				if (!tmp.contains(str)) {
+					tmp.add(str);
+				}
+			}
+		}
+		else {
+			hMapCandidate.put(key, value);
+		}
 	}
 }

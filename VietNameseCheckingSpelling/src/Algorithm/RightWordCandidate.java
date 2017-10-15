@@ -97,8 +97,13 @@ public class RightWordCandidate {
 						//candidateWithScore = Candidate.GetInstance().SordDict(candidateWithScore);
 					}
 					// nếu phần tử cuối cùng có số điểm thấp hơn candidate hiện tại
-					else if (candidateWithScore.get(GetLastKeyInCandidateScore(candidateWithScore)) < score) {
-						candidateWithScore.remove(GetLastKeyInCandidateScore(candidateWithScore));
+					else {
+						for (String str : candidateWithScore.keySet()) {
+							if (candidateWithScore.get(str) < score) {
+								candidateWithScore.remove(str);
+								break;
+							}
+						}
 						candidateWithScore.put(candidate, score);
 						//candidateWithScore = Candidate.GetInstance().SordDict(candidateWithScore);
 					}

@@ -12,7 +12,7 @@ import java.util.Set;
 
 public class Candidate {
 	public double LIM_SIMILARITY() {
-		return 0.8;
+		return 0.7;
 	}
 	
 	public double LIM_LANGUAGEMODEL() {
@@ -77,12 +77,12 @@ public class Candidate {
 	public HashSet<String> CreateCandInCaseMoreWrongToken(Context context) {
 		HashSet<String> hSet = new HashSet<>();
 		// xxx
-		UnionWith(hSet, VNDictionary.GetInstance().FindCompoundVNWord_Xxx(context));
-		UnionWith(hSet, VNDictionary.GetInstance().FindCompoundVnWordCaseFirstTokenInXXX(context));
+		hSet = UnionWith(hSet, VNDictionary.GetInstance().FindCompoundVNWord_Xxx(context));
+		hSet = UnionWith(hSet, VNDictionary.GetInstance().FindCompoundVnWordCaseFirstTokenInXXX(context));
 		
 		// xx
-		UnionWith(hSet, VNDictionary.GetInstance().FindCompoundVnWord_xX(context));
-		UnionWith(hSet, VNDictionary.GetInstance().FindCompoundVnWord_Xx(context));
+		hSet = UnionWith(hSet, VNDictionary.GetInstance().FindCompoundVnWord_xX(context));
+		hSet = UnionWith(hSet, VNDictionary.GetInstance().FindCompoundVnWord_Xx(context));
 		return hSet;
 		
 	}
@@ -210,7 +210,7 @@ public class Candidate {
 		double calBiGram_PreToken = Ngram.GetInstance().CalBigram(context.getPre(), context.getToken());
 		double calBiGram_TokenNext = Ngram.GetInstance().CalBigram(context.getToken(), context.getNext());
 		
-		double ret = (0.5 * calBiGram_PreToken + 0.5 * calBiGram_TokenNext) * 1E3;
+		double ret = (0.5 * calBiGram_PreToken + 0.5 * calBiGram_TokenNext) * 1E5;
 		return ret;
 	}
 	
