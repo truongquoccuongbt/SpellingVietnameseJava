@@ -3,17 +3,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import Algorithm.Context;
 import Algorithm.FindError;
@@ -112,48 +111,12 @@ public class CheckError {
 //		}
 //	}
 	
-	public void FixError() {
-		Context tmp;
-		
+	public void FixError() {	
 		if ( this.listError.size() > 0) {
 			LinkedHashMap<Context , Integer> tmp1 = SortListError(this.listError);
-//			while (tmp1.size() > 0) {
-//				tmp = GetElementIndexHashMap(this.listError, 0);
-//				//FixError.GetInstance().GetCandidatesWithContext(this.listError);
-//				int pos = this.listError.get(tmp);
-//				this.output = HandleString(pos, this.listCandidate.get(tmp), tmp);
-//				this.listError.remove(tmp);
-//			}
-			for (Context con : tmp1.keySet()) {
-				int pos = tmp1.get(con);
-				this.output = HandleString(pos, this.listCandidate.get(con), con);
-			}
+			FixError fixError = new FixError();
+			this.output = fixError.FixErrorSentence(this.input, tmp1, this.listCandidate);
 		}
-	}
-	
-	public String HandleString(int pos, ArrayList<String> arrCandidate, Context c) {
-		pos += this.posCurrent;
-		String before = this.output.substring(0, pos);
-		String after = this.output.substring(pos + c.getToken().length(), this.output.length());
-		String candidate = "";
-		if (arrCandidate.size() > 0) {
-			for (int i = 0; i < arrCandidate.size(); i++) {
-				candidate += arrCandidate.get(i) + ", ";
-				if (i == 2) break;
-			}
-			candidate = candidate.substring(0, candidate.length() - 2) + " ";
-			String mid = "<e> " + c.getToken() + ": "  + candidate + "</e>";
-			this.posCurrent += mid.length() - c.getToken().length();
-			this.output = before + mid + after;
-		}
-		else {
-			candidate = " ";
-			String mid = "<e> " + c.getToken() + ": "  + candidate + "</e>";
-			this.posCurrent += mid.length() - c.getToken().length();
-			this.output = before + mid + after;
-		}
-		posBefore = pos;
-		return output;
 	}
 	
 	public Context GetElementIndexHashMap(HashMap<Context, Integer> has, int index) {

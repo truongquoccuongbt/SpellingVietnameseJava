@@ -79,7 +79,12 @@ public class RightWordCandidate {
 		String candidate;
 		for (Iterator<String> it = hSetCandidate.iterator(); it.hasNext();) {
 			candidate = it.next();
-			S = Candidate.GetInstance().CalScore_Similarity(context.getToken(), candidate);
+			if (candidate.equals(context.getToken())) {
+				S = 0.8;
+			}
+			else {
+				S = Candidate.GetInstance().CalScore_Similarity(context.getToken(), candidate);
+			}
 			if (S >= Candidate.GetInstance().LIM_SIMILARITY()) {
 				D = Candidate.GetInstance().CalScore_CompoundWord(context, candidate);
 				L = Candidate.GetInstance().CalScore_Ngram(context, candidate);

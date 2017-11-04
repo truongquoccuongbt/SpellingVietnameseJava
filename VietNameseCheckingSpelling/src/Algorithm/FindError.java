@@ -210,7 +210,7 @@ public class FindError {
 							ArrayList<String> hSetCandTmp = Candidate.GetInstance().CreateCandidate(context, isRightError);
 							//this.hMapCandidate.put(context, hSetCandTmp);
 							AddHmapCandidate(hMapCandidate, context, hSetCandTmp);
-							if (hSetCandTmp.size() > 0 && !context.getToken().equals(hSetCandTmp.get(0))) {
+							if (hSetCandTmp.size() > 0) {
 								// từ hiện tại sai mà không phải do từ phía sau
 								// tránh làm sai những gram phía sau
 								
@@ -235,8 +235,6 @@ public class FindError {
 						AddError(context, isRightError);
 					}
 				}
-				
-				
 				
 //				}
 //				else {
